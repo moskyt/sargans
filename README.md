@@ -170,5 +170,14 @@ SBB https://www.mobiles24.co/search?q=SBB+CFF+FFS+Swiss+Railway+Station+Jingle+C
 SNCF
 https://www.youtube.com/watch?v=NA5MwhuHWLo
 
+TODO: speaker
+
+TODO: napajeni 5v
+
+TODO: vnitrni pasky
+
+TODO: vymenit kablik na antenu
 
 VNITRNI ROZMER 120mm
+
+VZDALENOST NAVESTIDEL 200mm
