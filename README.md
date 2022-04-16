@@ -12,6 +12,8 @@ hodiny: normalne ukazuji hodiny (na stridacku s datem), pripadne cislo vagonku (
 
 LED displej - ukazuje linku a destinaci po prijezdu vagonku
 
+vnitrni osvetleni - trvale zapnute
+
 osvetleni koleje c. 3 - prepina se zlutym tlacitkem, navic blika pri prijezdu vagonku
 
 reproduktor - hraje pri prijezdu vagonku
@@ -48,10 +50,14 @@ https://www.laskakit.cz/rtc-hodiny-realneho-casu-ds3231--integrovana-baterie/
 Hodinovy displej TM1637
 https://www.laskakit.cz/hodinovy-displej-0-36--tm1637/
 
-LED pasky u koleje - dva 12V stripy zapojene do serie (!)
+LED pasky u 3. koleje - dva 12V stripy zapojene do serie (!)
 SQ-300 https://www.t-led.cz/p/led-pasek-vnitrni-sq3-300-7101
 ovladane pres MOSFET modul IRF520
 https://www.laskakit.cz/mosfet-tlacitko--irf520--24vdc-5a/
+
+LED pasky uvnitr - opet dva 12V stripy zapojene do serie (!)
+SQ-600 https://www.t-led.cz/p/led-pasek-vnitrni-sq3-600-7301
+pripojene primo
 
 RFID karty EM4100 125 kHz
 https://www.laskakit.cz/rfid-em4100-125khz-neprepisovatelna-karta/
@@ -68,8 +74,10 @@ Spinany 5/24V zdroj Meanwell RD-65B:
 https://www.czech-meanwell.cz/meanwell/RD-65B-Mean-Well-Spinany-zdroj-uzavreny-dvouhladino-d2182.htm
 
 5V - napaji primo LED, ctecku, neopixely + Arduino pres 5V pin
+-- pripojeno do patice v rohu desky
 
 24V - napaji indukcni civku a LED pasky
+-- rozvedene pres mirne predimenzovane svorkovnice
 
 ### Pinout pro arduino
 
@@ -93,6 +101,9 @@ VIN   (NC)                      TX    (NC)
 
 ### Zapojeni komponent na desku + kabely
 
+5V napajeni
+v rohu
+
 zlute tlacitko
 R20-21
 
@@ -103,16 +114,17 @@ neopixel (semafory)
 R25-27 (VCC,DATA,GND)
 
 rotary
-L19-L23 (GND,VCC,SWITCH,A,B)
+L19-L23 (GND,VCC,SWITCH,A,B cerna,zelena,cervena,modra,bila)
 
 hodinovy displej
 R53-56 (VCC,GND,DATA,CLK zelena,cervena,modra,cerna)
 
 RTC
 L52-55 (VCC,DATA,CLK,GND zluta,oranzova,cervena,hneda)
+--- tohle je naprosty fail, mohlo to byt primo na desce
 
 LED
-L25-29 (VCC,GND,DATA,CS,CLK)
+L25-29 (VCC,GND,DATA,CS,CLK bila,modra,cervena,zelena,cerna)
 
 RFID
 - antenovy konektor R59-60 -- patice
@@ -157,3 +169,6 @@ zvuky
 SBB https://www.mobiles24.co/search?q=SBB+CFF+FFS+Swiss+Railway+Station+Jingle+Chime&c=free-mp3-ringtones
 SNCF
 https://www.youtube.com/watch?v=NA5MwhuHWLo
+
+
+VNITRNI ROZMER 120mm
