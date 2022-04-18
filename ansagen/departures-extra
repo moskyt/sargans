@@ -1,29 +1,29 @@
-IC 51 | Romanshorn, Kreuzlingen, Konstanz
-IC 52 | Rorschach, Wil, Winterthur
+IC 51 | Romanshorn, Kreuzlingen, Konstanz | Dieser Zug wird heute mit einer Ersatzkomposition geführt.
+IC 52 | Rorschach, Wil, Winterthur | Dieser Zug verkehrt ohne Familienwagen.
 IC 53 | Zürich HB, Bern, Thun, Spiez, Visp, Brig
 IC 54 | Zürich HB, Bellinzona, Lugano | | ffs
 IC 55 | Rapperswil, Wetzikon, Oerlikon, Brugg, Aarau
 IC 56 | Zürich HB, Eglisau, Koblenz, Basel
 IC 57 | Zürich HB, Olten, Bern, Fribourg, Lausanne | | cff
 IR 51 | Landquart, Chur, Filisur, St. Moritz
-IR 51 | Ziegelbrücke, Rapperswill, Wintherthur, Schaffhausen
+IR 51 | Ziegelbrücke, Wintherthur, Schaffhausen | Dieser Zug hält nicht in Rapperswill.
 IR 52 | Landquart, Klosters, Tarasp
 IR 52 | Buchs, St. Margrethen, Rheineck
 IR 53 | Chur, Disentis, Andermatt
 IR 53 | Buchs, Rheineck, Romanshorn
 IR 54 | Ziegelbrücke, Pfäffikon, Einsiedeln
-IR 54 | Landquart, Chur, Arosa
+IR 54 | Landquart, Chur, Arosa | Dieser Zug wird heute mit einer Ersatzkomposition geführt.
 IR 55 | Buchs, Rheineck, Appenzell
 IR 55 | Landquart, Klosters, Zernez, Tirano | | ffs
 RE 51 | Flums, Murg, Ziegelbrücke, Netstal, Glarus, Sool, Linthal
 RE 51 | Landquart, Schiers, Klosters, Susch
-RE 52 | Walendstadt, Ziegelbrücke, Siebnen-Wangen, Pfäffikon
+RE 52 | Walendstadt, Siebnen-Wangen, Pfäffikon | Dieser Zug hält nicht in Ziegelbrücke.
 RE 52 | Landquart, Küblis, Klosters, Davos
 RE 53 | Buchs, Oberriet, Alstätten, Appenzell
 RE 53 | Landquart, Untervaz-Trimmis, Chur, Reichenau-Tamins, Thusis
 RE 54 | Oberriet, Heerbrugg, St. Margarethen
 RE 54 | Landquart, Chur, Versam-Safien, Ilanz
-RE 55 | Flums, Siegelbrücke, Benken, Uznach, Wattwil, Nesslau
+RE 55 | Flums, Ziegelbrücke, Benken, Wattwil, Nesslau | Dieser Zug hält nicht in Uznach.
 RE 55 | Landquart, Küblis, Lavin, Scuol-Tarasp
 TGV 9266 | Zürich HB, Basel, <lang xml:lang="fr-FR">Mulhouse, Dijon, Paris Gare de Lyon</lang> | | sncf
 TGV 9580 | Zürich HB, Basel, <lang xml:lang="fr-FR">Mulhouse, Belfort-Montbéliard, Besançon Franche-Comté, Chalon-sur-Saône, Lyon Part Dieu</lang> | | sncf
