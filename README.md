@@ -62,6 +62,9 @@ pripojene primo
 RFID karty EM4100 125 kHz
 https://www.laskakit.cz/rfid-em4100-125khz-neprepisovatelna-karta/
 
+MP3 prehravac MH2024K-24SS
+https://www.laskakit.cz/audio-mini-mp3-prehravac/
+
 Zesilovac PAM8403 (pouziva se levy kanal)
 https://www.laskakit.cz/2x3w-digitalni-audio-zesilovac-pam8403/
 
@@ -85,13 +88,13 @@ https://www.czech-meanwell.cz/meanwell/RD-65B-Mean-Well-Spinany-zdroj-uzavreny-d
 SCK   SPI CLK (LED CLK)         CIPO  (NC)
 3V3   (NC)                      COPI  SPI COPI (LED DATA)
 AREF  (NC)                      D10~  LED CS
-D14   neopixel                  D9~   (NC)
-D15   rotary B                  D8    signal1 red switch
-D16   rotary A                  D7    (NC)
+D14   neopixel                  D9~   MP3 RX
+D15   rotary B                  D8/SS MP3 TX
+D16   rotary A                  D7    signal1 red switch
 D17   rotary switch             D6~   (NC)
-SDA   I2C data (RTC)            D5~   speaker
+SDA   I2C data (RTC)            D5~   (NC)
 SDC   I2C clk (RTC)             D4    rfid
-D20   clock-display clk         D3~   strip
+D20   clock-display clk         D3~   gleis 3 strip
 D21   clock-display data        D2    strip yellow switch
 5V    power bus +               GND   (NC)
 RST   (NC)                      RST   (NC)
@@ -162,6 +165,13 @@ Rotary - 1.0.0
 
 DS3232RTC - 2.0.0
 
+## Nadrazni hlaseni
+
+viz adresar ansagen
+
+skutecne linky 18x
+vymyslene 30x
+
 ## Poznamky / WIP
 
 zvuky
@@ -177,6 +187,8 @@ TODO: napajeni 5v
 TODO: vnitrni pasky
 
 TODO: vymenit kablik na antenu
+
+TODO: prehodit asi tu d8 na d7
 
 VNITRNI ROZMER 120mm
 

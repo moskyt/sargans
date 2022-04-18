@@ -1,0 +1,918 @@
+{
+  "0001": {
+    "train": {
+      "text": "EC 193",
+      "voice": "EuroCity 193"
+    },
+    "destination": {
+      "text": "Memmingen, München Hbf",
+      "voice": "Sankt Margarethen, Bregenz, Memmingen, Buchloe, München Hauptbahnhof"
+    },
+    "jingle": "db",
+    "departure": [
+      13,
+      27
+    ],
+    "extras": [
+      "",
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0002": {
+    "train": {
+      "text": "IR 35",
+      "voice": "InterRegio 35"
+    },
+    "destination": {
+      "text": "Zürich HB, Bern",
+      "voice": "Walenstadt, Ziegelbruecke, Zürich Hauptbahnhof, Olten, Bern"
+    },
+    "jingle": "sbb",
+    "departure": [
+      17,
+      29
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E und F"
+    ]
+  },
+  "0003": {
+    "train": {
+      "text": "RE 54",
+      "voice": "RegioExpress 54"
+    },
+    "destination": {
+      "text": "Versam-Safien, Ilanz",
+      "voice": "Landquart, Chur, Versam-Safien, Ilanz"
+    },
+    "jingle": "sbb",
+    "departure": [
+      14,
+      5
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B und C"
+    ]
+  },
+  "0004": {
+    "train": {
+      "text": "IR 54",
+      "voice": "InterRegio 54"
+    },
+    "destination": {
+      "text": "Arosa",
+      "voice": "Landquart, Chur, Arosa"
+    },
+    "jingle": "sbb",
+    "departure": [
+      8,
+      44
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0005": {
+    "train": {
+      "text": "IC 3",
+      "voice": "InterCity 3"
+    },
+    "destination": {
+      "text": "Basel",
+      "voice": "Zürich Hauptbahnhof, Basel"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      10
+    ],
+    "extras": [
+      "Dieser Zug verkehrt ohne Familienwagen.",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C und D",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektoren A und B"
+    ]
+  },
+  "0006": {
+    "train": {
+      "text": "RJX",
+      "voice": "<lang xml:lang=\"en-US\">RailJet Express</lang>"
+    },
+    "destination": {
+      "text": "Wien Hbf",
+      "voice": "Buchs, Feldkirch, Wien Hauptbahnhof"
+    },
+    "jingle": "sbb",
+    "departure": [
+      14,
+      57
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0007": {
+    "train": {
+      "text": "IR 54",
+      "voice": "InterRegio 54"
+    },
+    "destination": {
+      "text": "Einsiedeln",
+      "voice": "Ziegelbrücke, Pfäffikon, Einsiedeln"
+    },
+    "jingle": "sbb",
+    "departure": [
+      15,
+      40
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D und E"
+    ]
+  },
+  "0008": {
+    "train": {
+      "text": "RE 51",
+      "voice": "RegioExpress 51"
+    },
+    "destination": {
+      "text": "Netstal, Linthal",
+      "voice": "Flums, Murg, Ziegelbrücke, Netstal, Glarus, Sool, Linthal"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      33
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A und B"
+    ]
+  },
+  "0009": {
+    "train": {
+      "text": "IC 53",
+      "voice": "InterCity 53"
+    },
+    "destination": {
+      "text": "Spiez, Brig",
+      "voice": "Zürich Hauptbahnhof, Bern, Thun, Spiez, Visp, Brig"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      36
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D und E",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0010": {
+    "train": {
+      "text": "NJ",
+      "voice": "<lang xml:lang=\"en-US\">NightJet</lang>"
+    },
+    "destination": {
+      "text": "Wien Hbf / Budapest / Prag",
+      "voice": "Feldkirch, Wien Hauptbahnhof / Budapest / Prag"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      10
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0011": {
+    "train": {
+      "text": "RE 55",
+      "voice": "RegioExpress 55"
+    },
+    "destination": {
+      "text": "Uznach, Nesslau",
+      "voice": "Flums, Siegelbrücke, Benken, Uznach, Wattwil, Nesslau"
+    },
+    "jingle": "sbb",
+    "departure": [
+      9,
+      52
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B und C"
+    ]
+  },
+  "0012": {
+    "train": {
+      "text": "IR 51",
+      "voice": "InterRegio 51"
+    },
+    "destination": {
+      "text": "Filisur, St. Moritz",
+      "voice": "Landquart, Chur, Filisur, Sankt Moritz"
+    },
+    "jingle": "sbb",
+    "departure": [
+      16,
+      58
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E, F und G",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0013": {
+    "train": {
+      "text": "IR 53",
+      "voice": "InterRegio 53"
+    },
+    "destination": {
+      "text": "Romanshorn",
+      "voice": "Buchs, Rheineck, Romanshorn"
+    },
+    "jingle": "sbb",
+    "departure": [
+      16,
+      55
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E, F und G"
+    ]
+  },
+  "0014": {
+    "train": {
+      "text": "IR 52",
+      "voice": "InterRegio 52"
+    },
+    "destination": {
+      "text": "Rheineck",
+      "voice": "Buchs, Sankt Margrethen, Rheineck"
+    },
+    "jingle": "sbb",
+    "departure": [
+      8,
+      26
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0015": {
+    "train": {
+      "text": "IR 13",
+      "voice": "InterRegio 13"
+    },
+    "destination": {
+      "text": "Chur",
+      "voice": "Landquart, Chur"
+    },
+    "jingle": "sbb",
+    "departure": [
+      14,
+      11
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0016": {
+    "train": {
+      "text": "S4",
+      "voice": "S4"
+    },
+    "destination": {
+      "text": "Salez-Sennwald, St. Gallen",
+      "voice": "Sevelen, Buchs, Salez-Sennwald, Sankt Gallen"
+    },
+    "jingle": "sbb",
+    "departure": [
+      17,
+      3
+    ],
+    "extras": [
+      "Dieser Zug hält nicht in Rorschach.",
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C und D"
+    ]
+  },
+  "0017": {
+    "train": {
+      "text": "TGV 9266",
+      "voice": "<lang xml:lang=\"fr-FR\">TGV</lang> 9266"
+    },
+    "destination": {
+      "text": "Mulhouse, Paris Gare de Lyon",
+      "voice": "Zürich Hauptbahnhof, Basel, <lang xml:lang=\"fr-FR\">Mulhouse, Dijon, Paris Gare de Lyon</lang>"
+    },
+    "jingle": "sncf",
+    "departure": [
+      17,
+      39
+    ],
+    "extras": [
+      "",
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C und D",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0018": {
+    "train": {
+      "text": "RE 52",
+      "voice": "RegioExpress 52"
+    },
+    "destination": {
+      "text": "Klosters, Davos",
+      "voice": "Landquart, Küblis, Klosters, Davos"
+    },
+    "jingle": "sbb",
+    "departure": [
+      9,
+      10
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektor A, Zweite klasse sektoren A und B"
+    ]
+  },
+  "0019": {
+    "train": {
+      "text": "RE 53",
+      "voice": "RegioExpress 53"
+    },
+    "destination": {
+      "text": "Chur, Thusis",
+      "voice": "Landquart, Untervaz-Trimmis, Chur, Reichenau-Tamins, Thusis"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      24
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B und C"
+    ]
+  },
+  "0020": {
+    "train": {
+      "text": "IC 54",
+      "voice": "InterCity 54"
+    },
+    "destination": {
+      "text": "Lugano",
+      "voice": "Zürich Hauptbahnhof, Bellinzona, Lugano"
+    },
+    "jingle": "ffs",
+    "departure": [
+      17,
+      0
+    ],
+    "extras": [
+      "",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D und E",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0021": {
+    "train": {
+      "text": "ICE",
+      "voice": "InterCityE"
+    },
+    "destination": {
+      "text": "Chur",
+      "voice": "Landquart, Chur"
+    },
+    "jingle": "sbb",
+    "departure": [
+      9,
+      36
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0022": {
+    "train": {
+      "text": "IC 57",
+      "voice": "InterCity 57"
+    },
+    "destination": {
+      "text": "Bern, Lausanne",
+      "voice": "Zürich Hauptbahnhof, Olten, Bern, Fribourg, Lausanne"
+    },
+    "jingle": "cff",
+    "departure": [
+      13,
+      36
+    ],
+    "extras": [
+      "",
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0023": {
+    "train": {
+      "text": "IC 51",
+      "voice": "InterCity 51"
+    },
+    "destination": {
+      "text": "Konstanz",
+      "voice": "Romanshorn, Kreuzlingen, Konstanz"
+    },
+    "jingle": "sbb",
+    "departure": [
+      10,
+      50
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0024": {
+    "train": {
+      "text": "RE",
+      "voice": "RegioExpress"
+    },
+    "destination": {
+      "text": "Heerbrugg, St. Gallen",
+      "voice": "Buchs, Altstaetten, Heerbrugg, Rorschach, Sankt Gallen"
+    },
+    "jingle": "sbb",
+    "departure": [
+      13,
+      41
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B und C",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0025": {
+    "train": {
+      "text": "RE 55",
+      "voice": "RegioExpress 55"
+    },
+    "destination": {
+      "text": "Lavin, Scuol-Tarasp",
+      "voice": "Landquart, Küblis, Lavin, Scuol-Tarasp"
+    },
+    "jingle": "sbb",
+    "departure": [
+      9,
+      46
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B und C",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0026": {
+    "train": {
+      "text": "RJX",
+      "voice": "<lang xml:lang=\"en-US\">RailJet Express</lang>"
+    },
+    "destination": {
+      "text": "Zürich HB",
+      "voice": "Zürich Hauptbahnhof"
+    },
+    "jingle": "sbb",
+    "departure": [
+      18,
+      19
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0027": {
+    "train": {
+      "text": "S12",
+      "voice": "S12"
+    },
+    "destination": {
+      "text": "Landquart, Chur",
+      "voice": "Bad Ragaz, Mainefeld, Landquart, Chur"
+    },
+    "jingle": "sbb",
+    "departure": [
+      17,
+      1
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C und D",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektoren A und B",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0028": {
+    "train": {
+      "text": "ICE",
+      "voice": "InterCityE"
+    },
+    "destination": {
+      "text": "Basel Bad Bahnhof, Hamburg-Altona",
+      "voice": "Zürich Hauptbahnhof, Basel SBB, Basel Bad Bahnhof, Hamburg-Altona"
+    },
+    "jingle": "sbb",
+    "departure": [
+      15,
+      56
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D und E",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0029": {
+    "train": {
+      "text": "S4",
+      "voice": "S4"
+    },
+    "destination": {
+      "text": "Rorschach, Wattwil",
+      "voice": "Sevelen, Buchs, Rorschach, Sankt Gallen, Wattwil"
+    },
+    "jingle": "sbb",
+    "departure": [
+      14,
+      22
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0030": {
+    "train": {
+      "text": "IR 35",
+      "voice": "InterRegio 35"
+    },
+    "destination": {
+      "text": "Chur",
+      "voice": "Landquart, Chur"
+    },
+    "jingle": "sbb",
+    "departure": [
+      15,
+      27
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektoren B und C"
+    ]
+  },
+  "0031": {
+    "train": {
+      "text": "RE 53",
+      "voice": "RegioExpress 53"
+    },
+    "destination": {
+      "text": "Alstätten, Appenzell",
+      "voice": "Buchs, Oberriet, Alstätten, Appenzell"
+    },
+    "jingle": "sbb",
+    "departure": [
+      13,
+      29
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A und B"
+    ]
+  },
+  "0032": {
+    "train": {
+      "text": "RE 51",
+      "voice": "RegioExpress 51"
+    },
+    "destination": {
+      "text": "Klosters, Susch",
+      "voice": "Landquart, Schiers, Klosters, Susch"
+    },
+    "jingle": "sbb",
+    "departure": [
+      12,
+      5
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B und C"
+    ]
+  },
+  "0033": {
+    "train": {
+      "text": "S4",
+      "voice": "S4"
+    },
+    "destination": {
+      "text": "Walenstadt, Uznach",
+      "voice": "Mels, Flums, Walenstadt, Unterterzen, Uznach"
+    },
+    "jingle": "sbb",
+    "departure": [
+      10,
+      21
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C und D",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektoren A und B",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0034": {
+    "train": {
+      "text": "IC 3",
+      "voice": "InterCity 3"
+    },
+    "destination": {
+      "text": "Chur",
+      "voice": "Landquart, Chur"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      51
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C und D",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0035": {
+    "train": {
+      "text": "TGV 9580",
+      "voice": "<lang xml:lang=\"fr-FR\">TGV</lang> 9580"
+    },
+    "destination": {
+      "text": "Belfort-Montbéliard, Lyon Part Dieu",
+      "voice": "Zürich Hauptbahnhof, Basel, <lang xml:lang=\"fr-FR\">Mulhouse, Belfort-Montbéliard, Besançon Franche-Comté, Chalon-sur-Saône, Lyon Part Dieu</lang>"
+    },
+    "jingle": "sncf",
+    "departure": [
+      19,
+      12
+    ],
+    "extras": [
+      "",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0036": {
+    "train": {
+      "text": "IR 51",
+      "voice": "InterRegio 51"
+    },
+    "destination": {
+      "text": "Wintherthur, Schaffhausen",
+      "voice": "Ziegelbrücke, Rapperswill, Wintherthur, Schaffhausen"
+    },
+    "jingle": "sbb",
+    "departure": [
+      9,
+      41
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0037": {
+    "train": {
+      "text": "IR 53",
+      "voice": "InterRegio 53"
+    },
+    "destination": {
+      "text": "Andermatt",
+      "voice": "Chur, Disentis, Andermatt"
+    },
+    "jingle": "sbb",
+    "departure": [
+      17,
+      48
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0038": {
+    "train": {
+      "text": "IR 55",
+      "voice": "InterRegio 55"
+    },
+    "destination": {
+      "text": "Zernez, Tirano",
+      "voice": "Landquart, Klosters, Zernez, Tirano"
+    },
+    "jingle": "ffs",
+    "departure": [
+      13,
+      24
+    ],
+    "extras": [
+      "",
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0039": {
+    "train": {
+      "text": "RE 54",
+      "voice": "RegioExpress 54"
+    },
+    "destination": {
+      "text": "St. Margarethen",
+      "voice": "Oberriet, Heerbrugg, Sankt Margarethen"
+    },
+    "jingle": "sbb",
+    "departure": [
+      13,
+      0
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B und C"
+    ]
+  },
+  "0040": {
+    "train": {
+      "text": "IR 13",
+      "voice": "InterRegio 13"
+    },
+    "destination": {
+      "text": "Heerbrugg, St. Gallen",
+      "voice": "Buchs, Altstaetten, Heerbrugg, Rorschach, Sankt Gallen"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      47
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D, E, F und G"
+    ]
+  },
+  "0041": {
+    "train": {
+      "text": "IC 52",
+      "voice": "InterCity 52"
+    },
+    "destination": {
+      "text": "Winterthur",
+      "voice": "Rorschach, Wil, Winterthur"
+    },
+    "jingle": "sbb",
+    "departure": [
+      14,
+      14
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D und E",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0042": {
+    "train": {
+      "text": "IR 52",
+      "voice": "InterRegio 52"
+    },
+    "destination": {
+      "text": "Tarasp",
+      "voice": "Landquart, Klosters, Tarasp"
+    },
+    "jingle": "sbb",
+    "departure": [
+      8,
+      43
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D und E",
+      "Gleis 3: Vorsicht, der Zug fährt ab!"
+    ]
+  },
+  "0043": {
+    "train": {
+      "text": "IR 55",
+      "voice": "InterRegio 55"
+    },
+    "destination": {
+      "text": "Appenzell",
+      "voice": "Buchs, Rheineck, Appenzell"
+    },
+    "jingle": "sbb",
+    "departure": [
+      11,
+      51
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D und E",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0044": {
+    "train": {
+      "text": "S4",
+      "voice": "S4"
+    },
+    "destination": {
+      "text": "Rorschach, Herisau",
+      "voice": "Sevelen, Buchs, Rorschach, Sankt Gallen, Herisau"
+    },
+    "jingle": "sbb",
+    "departure": [
+      17,
+      21
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren A, B, C, D und E",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0045": {
+    "train": {
+      "text": "RE 52",
+      "voice": "RegioExpress 52"
+    },
+    "destination": {
+      "text": "Siebnen-Wangen, Pfäffikon",
+      "voice": "Walendstadt, Ziegelbrücke, Siebnen-Wangen, Pfäffikon"
+    },
+    "jingle": "sbb",
+    "departure": [
+      13,
+      45
+    ],
+    "extras": [
+      "Dieser Zug wird verkürzt gebildet.",
+      "Erste klasse Sektor A, Zweite klasse sektoren B und C"
+    ]
+  },
+  "0046": {
+    "train": {
+      "text": "RJX",
+      "voice": "<lang xml:lang=\"en-US\">RailJet Express</lang>"
+    },
+    "destination": {
+      "text": "Salzburg Hbf",
+      "voice": "Buchs, Feldkirch, Salzburg Hauptbahnhof"
+    },
+    "jingle": "sbb",
+    "departure": [
+      16,
+      46
+    ],
+    "extras": [
+      "Erste klasse Sektor A, Zweite klasse sektoren B, C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor A"
+    ]
+  },
+  "0047": {
+    "train": {
+      "text": "IC 55",
+      "voice": "InterCity 55"
+    },
+    "destination": {
+      "text": "Oerlikon, Aarau",
+      "voice": "Rapperswil, Wetzikon, Oerlikon, Brugg, Aarau"
+    },
+    "jingle": "sbb",
+    "departure": [
+      16,
+      10
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E und F",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+  "0048": {
+    "train": {
+      "text": "IC 56",
+      "voice": "InterCity 56"
+    },
+    "destination": {
+      "text": "Koblenz, Basel",
+      "voice": "Zürich Hauptbahnhof, Eglisau, Koblenz, Basel"
+    },
+    "jingle": "sbb",
+    "departure": [
+      15,
+      6
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren C, D, E, F und G"
+    ]
+  }
+}

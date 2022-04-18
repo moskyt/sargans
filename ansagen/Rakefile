@@ -1,0 +1,185 @@
+require "bundler/setup"
+require 'aws-sdk-polly'
+require "paint"
+
+def list(k)
+  if Array === k
+    k = if k.size == 1
+      "#{k[0]}"
+    else
+      "#{k[0...-1] * ", "} und #{k[-1]}"
+    end
+  else
+    k
+  end
+end
+
+def train_t2v(t)
+  {
+    "IR" => "InterRegio",
+    "IC" => "InterCity",
+    "RE" => "RegioExpress",
+    "EC" => "EuroCity",
+    "ICE" => "InterCity Express",
+    "RJX" => "<lang xml:lang=\"en-US\">RailJet Express</lang>",
+    "NJ" => "<lang xml:lang=\"en-US\">NightJet</lang>",
+    "TGV" => "<lang xml:lang=\"fr-FR\">TGV</lang>",
+  }.each do |a, b|
+    t = t.sub(a, b)
+  end
+  t
+end
+
+def route_t2v(t)
+  {
+    "Hbf" => "Hauptbahnhof",
+    "HB" => "Hauptbahnhof",
+    "Bf" => "Bahnhof",
+    "St." => "Sankt",
+  }.each do |a, b|
+    t = t.sub(a, b)
+  end
+  t
+end
+
+KURZ = "Dieser Zug wird verkürzt gebildet."
+KLASSEN = lambda do |k1, k2|
+  k1 = list(k1)
+  k2 = list(k2)
+  "Erste klasse Sektor#{k1.size == 1 ? "" : "en"} #{k1}, Zweite klasse sektor#{k2.size == 1 ? "" : "en"} #{k2}"
+end
+RESTAURANT = lambda do |k1|
+  k1 = list(k1)
+  %{<lang xml:lang="fr-FR">Restaurant</lang> Sektor#{k1.size == 1 ? "" : "en"} #{k1}}
+end
+ABFAHRT = "Gleis 3: Vorsicht, der Zug fährt ab!"
+
+def synth(output:, jingle:, train:, destination:, departure:, extras: [])
+
+  contents =
+    %{<prosody rate="75%">} +
+    %{<p>gleis 3: einfahrt des #{train} nach #{destination}.</p>} +
+    %{<p>abfahrt #{departure[0]} uhr #{"%02d" % departure[1]}.</p>} +
+    %{#{extras.map{|x| "<p>#{x}</p>"} * ""}} +
+    %{</prosody>}
+
+  FileUtils.mkdir_p("tmp/#{output}")
+  FileUtils.mkdir_p("mp3")
+
+  polly = Aws::Polly::Client.new
+
+  puts Paint["=== #{output} ===", :bold]
+  puts "#{output}: Synthesizing through Polly"
+  puts "  #{contents}"
+  resp = polly.synthesize_speech({
+    output_format: "ogg_vorbis",
+    text: contents,
+    voice_id: "Vicki",
+    engine: "neural",
+    language_code: "de-DE",
+    text_type: "ssml"
+  })
+
+  puts "#{output}: Writing OGG"
+  IO.copy_stream(resp.audio_stream, "tmp/#{output}/speech.ogg")
+
+  puts "#{output}: Converting throught ffmpeg to MP3"
+  `ffmpeg -y -i resources/jingles/#{jingle}.mp3 -ac 1 tmp/#{output}/jingle.mp3`
+  `ffmpeg -y -i tmp/#{output}/speech.ogg -vn -ar 44100 -ac 1 -b:a 192k tmp/#{output}/speech.mp3`
+
+  puts "#{output}: Merging with jingle"
+  `ffmpeg -y -i "concat:tmp/#{output}/jingle.mp3|tmp/#{output}/speech.mp3" -acodec copy tmp/#{output}/speech_with_jingle.mp3`
+
+  puts "#{output}: Adding echo"
+  `ffmpeg -y -i tmp/#{output}/speech_with_jingle.mp3 -i "resources/reverbs/Large Wide Echo Hall.wav" -filter_complex '[0] [1] afir=dry=10:wet=10 [reverb]; [0] [reverb] amix=inputs=2:weights=10 1' mp3/#{output}.mp3`
+
+  puts "#{output}: Done."
+end
+
+task :timetable do
+  departures = (File.read("departures-actual_sargans") + "\n" + File.read("departures-extra")).strip.split("\n").map(&:strip).reject(&:empty?)
+  departures.size == 48 or raise
+  departures.map! do |s|
+    train, route, extra, jingle = *s.split("|").map(&:strip)
+    route_list = route.gsub(/<.+?>/, "").strip.split(",").map(&:strip)
+    {
+      train: {
+        text: train,
+        voice: train_t2v(train),
+      },
+      destination: {
+        text: route_list.size > 3 ? ("#{route_list[route_list.size/2]}, #{route_list.last}") : route_list.last,
+        voice: route_t2v(route)
+      },
+      extra: extra,
+      jingle: jingle || "sbb",
+    }
+  end
+  json = {}
+  (0...24).each do |i|
+    id1 = "%04d" % (2*i+1)
+    id2 = "%04d" % (2*i+2)
+    # random pick
+    i1 = rand(departures.size)
+    pick1 = departures.delete_at(i1)
+    # random pick (TODO improve)
+    i2 = rand(departures.size)
+    pick2 = departures.delete_at(i2)
+
+    # add extras and time
+    [pick1, pick2].each do |p|
+      p[:departure] = [8+rand(12), rand(60)]
+      p[:extras] = []
+      p[:extras] << p[:extra] if p[:extra]
+      p[:extras] << KURZ if rand < 0.3 and (p[:train][:text].include?("RE") or p[:train][:text].include?("IR"))
+      p.delete(:extra)
+
+      if p[:train][:text].include?("RE")
+        n_sectors = 2 + rand(2)
+      else
+        n_sectors = 4 + rand(4)
+      end
+      c1_sector = rand(n_sectors / 3)
+      c1_sector -= 1 if c1_sector == n_sectors-1
+      sectors = %w{A B C D E F G H}
+      p[:extras] << KLASSEN[sectors[0..c1_sector], sectors[c1_sector+(rand < 0.6 ? 0 : 1)...n_sectors]]
+
+      if rand < 0.7 and not p[:train][:text].include?("RE")
+        rx = [c1_sector]
+        rx << c1_sector + 1 if rand < 0.2
+        p[:extras] << RESTAURANT[rx.map{|r| sectors[r]}]
+      end
+
+      p[:extras] << ABFAHRT if rand < 0.2
+    end
+
+    json[id1] = pick1
+    json[id2] = pick2
+  end
+  File.write("departures.json", JSON::pretty_generate(json))
+end
+
+task :synth do
+  json = JSON[File.read("departures.json")]
+  json.each do |id, t|
+    synth(
+      output: id,
+      jingle: t["jingle"],
+      train: t["train"]["voice"],
+      destination: t["destination"]["voice"],
+      departure: t["departure"],
+      extras: t["extras"],
+      )
+  end
+end
+
+task :arduino do
+  json = JSON[File.read("departures.json")]
+  File.open("destinations.h", "w") do |f|
+    f.puts "{"
+    json.each do |id, t|
+      f.puts "\"#{t["train"]["text"]} | #{t["destination"]["text"]}\","
+    end
+    f.puts "};"
+  end
+end
