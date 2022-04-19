@@ -108,7 +108,7 @@ task :timetable do
         voice: train_t2v(train),
       },
       destination: {
-        text: route_list.size > 3 ? ("#{route_list[route_list.size/2]}, #{route_list.last}") : route_list.last,
+        text: route_list.size > 3 ? ("#{route_list[route_list.size/2]} - #{route_list.last}") : route_list.last,
         voice: route_t2v(route)
       },
       extra: extra,
@@ -151,6 +151,8 @@ task :timetable do
       end
 
       p[:extras] << ABFAHRT if rand < 0.2
+      p[:extras].compact!
+      p[:extras].reject!(&:empty?)
     end
 
     json[id1] = pick1
@@ -175,10 +177,16 @@ end
 
 task :arduino do
   json = JSON[File.read("departures.json")]
-  File.open("destinations.h", "w") do |f|
-    f.puts "{"
-    json.each do |id, t|
-      f.puts "\"#{t["train"]["text"]} | #{t["destination"]["text"]}\","
+
+  list = []
+  json.each do |id, t|
+    list << "#{t["train"]["text"]} | #{t["destination"]["text"]}"
+  end
+
+  File.open("../sargans-arduino/destinations.h", "w") do |f|
+    f.puts "const char destinations[#{json.size}][#{list.map(&:size).max + 1}] = {"
+    list.each_with_index do |s, si|
+      f.puts "  \"#{s}\"#{si == list.size - 1 ? "" : ","}"
     end
     f.puts "};"
   end

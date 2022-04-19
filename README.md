@@ -28,7 +28,15 @@ je 24V indukcni civka, rozsveci se svetylka na vagoncich
 - na LED banneru se zobrazi linka / destinace
 - zahraje se melodie na vagonku a to:
 a) pokud je dnes den daneho vagonku, tak pro Vorsilu Old McDonald's a pro Vlka Tschipfu-tschi en Isebahn chunnt
-b) v ostatni dny prislusna zeleznicni znelka (SBB nemecka/francouzska/italska, SNCF, Trenitalia)
+b) v ostatni dny prislusna zeleznicni znelka (SBB, CFF, FFS, SNCF, DB) + hlaseni
+
+### Hlaseni
+
+Osmnact jich odpovida skutecne odjizdejicim linkam ze Sargansu, ale jinak jsou ze 2/3 smyslena, aby bylo pokazde jine. Destinace pokryvaji siroke okoli i vzdalenejsi kouty Svycarska, je tam i par mezinarodnich vlaku. Jingle na zacatku odpovida cilove destinaci, jinak by samozrejme mela byt porad jen SBB.
+
+Na displeji se ukaze jen linka a cil (popr. jedna nacestna stanice), v hlaseni je pak trasa podrobneji.
+
+Do hlaseni jsou prigenerovane i nejake dalsi splechty ohledne sektoru trid, restauracniho vozu, absence rodinneho vozu a podobne.
 
 ## Hardware
 
@@ -40,6 +48,7 @@ https://www.laskakit.cz/rfid-ctecka-s-antenou-125khz-em4100-rdm6300/
 
 LED maticovy displej 32x8 MAX7219
 https://www.laskakit.cz/32x8-led-matice-s-max7219-3mm/
+TODO: vymenit za vetsi
 
 Indukcni smycka na svetla na vagonky
 https://www.adafruit.com/product/5141
@@ -134,6 +143,9 @@ RFID
 - napajeci konektor R47-79 NC,VCC,GND
 - datovy konektor L47-51 DATA,NC,NC,NC,NC
 
+MP3 
+TODO
+
 ### Mechanicke poznamky
 
 EIC napajeci zasuvka je pripojena pres vypinac (na L zile) na vstup AC/DC zdroje.
@@ -167,28 +179,58 @@ DS3232RTC - 2.0.0
 
 ## Nadrazni hlaseni
 
-viz adresar ansagen
+Adresar `ansagen` obsahuje dva seznamy `departures-actual_sargans` (skutecne vlaky ze Sargansu) a `departures-extra` (vymyslene vlaky ze Sargansu, primerene zajimave trasy pro hledani na mape), coz jsou pseudoCSV ve formatu LINKA | TRASA | HLASENI | JINGLE. O dalsi postup se staraji rake tasky:
 
-skutecne linky 18x
-vymyslene 30x
+### timetable
+
+Generuje `departures.json`, ktery obsahuje uz konkretne pripraveny 48-prvkovy dataset pro jednotlive vagonky. 
+
+Texty jsou ve variante `text` pro displej a `voice` pro text-to-speech syntetizer (format SSML).
+
+Jingle je nazev znelky, viz `ansagen/resources/jingles/*.mp3` -- pozor, ffmpeg si s nimi neporadil, pokud to nebylo 44kHz. Ale jiste by to slo poladit, kdyby si nekdo ffmpeg poradne nastudoval...
+
+```
+  "0001": { # ID
+    "train": { # oznaceni vlaku
+      "text": "EC 193",
+      "voice": "EuroCity 193"
+    },
+    "destination": { # trasa
+      "text": "Memmingen, München Hbf",
+      "voice": "Sankt Margarethen, Bregenz, Memmingen, Buchloe, München Hauptbahnhof"
+    },
+    "jingle": "db", # znelka
+    "departure": [ # cas odjezdu H:M
+      13,
+      27
+    ],
+    "extras": [
+      "Erste klasse Sektoren A und B, Zweite klasse sektoren B, C, D, E, F und G",
+      "<lang xml:lang=\"fr-FR\">Restaurant</lang> Sektor B"
+    ]
+  },
+```
+
+### arduino
+
+Generuje `sargans-arduino/destinations.h`, sadu retezcu pro LED banner.
+
+### synth
+
+Generuje MP3 hlaseni v adresari `ansagen/mp3`. Postup je nasledujici:
+* sestaveni textu hlaseni
+* synteza hlasu -- Amazon Polly (AWS)
+* konverze na mp3 (soubory generovane primo polly nejak neprochazely pres ffmpeg)
+* spojeni s prislusnym jinglem -- ffmpeg
+* pridani reverb efektu -- ffmpeg
+
+Je potreba mit nakonfigurovany AWS CLI, resp. vygenerovany konfigurak (pomoci `aws configure` nebo rucne).
 
 ## Poznamky / WIP
 
-zvuky
-
-SBB https://www.mobiles24.co/search?q=SBB+CFF+FFS+Swiss+Railway+Station+Jingle+Chime&c=free-mp3-ringtones
-SNCF
-https://www.youtube.com/watch?v=NA5MwhuHWLo
-
-TODO: speaker
+TODO: mp3
 
 TODO: napajeni 5v
-
-TODO: vnitrni pasky
-
-TODO: vymenit kablik na antenu
-
-TODO: prehodit asi tu d8 na d7
 
 VNITRNI ROZMER 120mm
 

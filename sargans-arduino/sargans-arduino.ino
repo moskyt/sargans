@@ -1,3 +1,4 @@
+// system libraries
 #include <Arduino.h>
 #include <MD_MAX72xx.h>
 #include <TM1637Display.h>
@@ -6,7 +7,11 @@
 #include <Rotary.h>
 #include <DS3232RTC.h>
 
+// bundled libraries
 #include "rdm6300.h"
+
+// data
+#include "destinations.h"
 
 // debouncing delay for buttons in ms
 const int button_debounce_delay = 20; 
@@ -24,14 +29,15 @@ const int pin_strip_switch = 2;
 const int pin_strip = 3; // pwm needed
 const int pin_rdm6300 = 4;
 const int pin_speaker = 5; // pwm needed
-const int pin_signal1_switch = 8;
+const int pin_signal1_switch = 7;
 const int pin_neopixel = 14;
 const int pin_rotary_switch = 17;
 const int pin_rotary_a = 15;
 const int pin_rotary_b = 16;
 const int pin_clockdisplay_clk = 20;
 const int pin_clockdisplay_data = 21;
-
+const int pin_mp3_rx = 9;
+const int pin_mp3_tx = 8;  
 
 // RFID reader
 Rdm6300 rdm6300;
@@ -64,13 +70,6 @@ const uint32_t wagon_uids[n_wagons] = {
 
 #define BUF_SIZE  75
 char message[BUF_SIZE] = "Hello world!";
-
-const char destinations[n_wagons][80] = {
-  "S12 Bad Ragaz - Maienfeld - Chur",
-  "S4 Sevelen - Buchs SG - Salez - Sennwald - Rorschach - St. Gallen",
-  "S4 Mels - Flums - Walenstadt - Uznach",
-  "IC3 Zuerich HB - Basel SBB"
-};
 
 int previous_wagon = -1;
 
