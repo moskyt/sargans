@@ -163,6 +163,8 @@ nastaveni RTC hodin neni udelane nijak chytre, v pripade potreby se provede jedn
 
 ### Knihovny
 
+boards package: megaAVR
+
 RDM6300 - bundled
 
 MD_MAX72XX - 3.3.0

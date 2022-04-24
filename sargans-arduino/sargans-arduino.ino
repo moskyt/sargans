@@ -8,6 +8,7 @@
 #include <DS3232RTC.h>
 
 // bundled libraries
+#define RDM6300_SOFTWARE_SERIAL
 #include "rdm6300.h"
 
 // data
@@ -17,6 +18,11 @@
 const int button_debounce_delay = 20; 
 const int strip_blink_period = 10;
 const int strip_blink_count = 10;
+
+// led settings
+#define N_LED_BLOCKS 6
+#define SCROLL_DELAY 4
+#define CHAR_SPACING 1
 
 // max intensity of neopixel (signals)
 const int neo_intensity = 20;
@@ -42,7 +48,7 @@ const int pin_mp3_tx = 8;
 // RFID reader
 Rdm6300 rdm6300;
 // LED banner -- unfortunately, PAROLA cannot be used (insane mmry requirements)
-MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::FC16_HW, pin_led_cs, 4);
+MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::FC16_HW, pin_led_cs, N_LED_BLOCKS);
 // neopixels 
 Adafruit_NeoPixel pixels(2, pin_neopixel, NEO_GRB + NEO_KHZ800);
 // 4-digit clock display
@@ -64,12 +70,8 @@ const uint32_t wagon_uids[n_wagons] = {
   186263
 };
 
-#define MAX_DEVICES 4
-#define SCROLL_DELAY 5
-#define CHAR_SPACING 1
-
 #define BUF_SIZE  75
-char message[BUF_SIZE] = "Hello world!";
+char message[BUF_SIZE] = "Sargans SBB";
 
 int previous_wagon = -1;
 
@@ -95,6 +97,7 @@ void setup()
 
   // --- init pins not handled separately
   pinMode(pin_strip, OUTPUT);
+  pinMode(pin_rdm6300, INPUT_PULLUP);
 
   // --- init RFID
   Serial.println(F("Init RFID..."));
@@ -104,11 +107,11 @@ void setup()
   Serial.println(F("Init banner..."));
   mx.begin();
   mx.control(MD_MAX72XX::INTENSITY, 1); // Use a value between 0 and 15 for brightness
-  //printText(0, MAX_DEVICES-1, message);
+  printText(0, N_LED_BLOCKS-1, message);
   mx.setShiftDataInCallback(scrollDataSource);
   mx.setShiftDataOutCallback(scrollDataSink);
 
-  setScrollMessage(message);
+  // setScrollMessage(message);
   
   // --- init clock display
   Serial.println(F("Init clock..."));
@@ -126,7 +129,7 @@ void setup()
   // --- set RTC time
   // this is a super-not-nice way to handle this. just set it and uncomment here.
   // might not be needed anymore!    
-  //setTime( 9, 39,  0, 15, 4, 2022);   // H M S , D M Y
+  //setTime( 11, 20,  0, 24, 4, 2022);   // H M S , D M Y
   //rtc.set(now());
   
   // --- init neopixels (traffic signals)
@@ -165,7 +168,7 @@ void loop() {
   rotary_button.process(now);
   strip_button.process(now);
   signal1_button.process(now);
-  
+
   // --- process RFID
   if (rdm6300.get_new_tag_id()) {
     uint32_t uid = rdm6300.get_tag_id();
