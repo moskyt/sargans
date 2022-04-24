@@ -17,26 +17,12 @@ void Rdm6300::begin(int rx_pin, uint8_t uart_nr)
 {
 	/* init serial port to rdm6300 baud, without TX, and 20ms read timeout */
 	end();
-#if defined(ARDUINO_ARCH_ESP32)
-	_stream = _hardware_serial = new HardwareSerial(uart_nr);
-	_hardware_serial->begin(RDM6300_BAUDRATE, SERIAL_8N1, rx_pin, -1);
-#elif defined(ARDUINO_ARCH_ESP8266)
-	if (rx_pin == 13) {
-		_stream = _hardware_serial = &Serial;
-		_hardware_serial->begin(RDM6300_BAUDRATE, SERIAL_8N1, SERIAL_RX_ONLY);
-		if (uart_nr)
-			_hardware_serial->swap();
-	}
-#elif defined(ARDUINO_ARCH_SAMD)
-	_stream = _hardware_serial = (uart_nr == 2 ? &Serial2 : &Serial1);
-	_hardware_serial->begin(RDM6300_BAUDRATE, SERIAL_8N1);
-#endif
-#ifdef RDM6300_SOFTWARE_SERIAL
+
 	if (!_stream) {
 		_stream = _software_serial = new SoftwareSerial(rx_pin, -1);
 		_software_serial->begin(RDM6300_BAUDRATE);
 	}
-#endif
+
 	begin(_stream);
 }
 
@@ -154,7 +140,6 @@ uint32_t Rdm6300::get_new_tag_id(void)
 	return tag_id;
 }
 
-#ifdef RDM6300_SOFTWARE_SERIAL
 void Rdm6300::listen(void)
 {
 	_software_serial->listen();
@@ -164,4 +149,3 @@ bool Rdm6300::is_listening(void)
 {
 	return _software_serial->isListening();
 }
-#endif

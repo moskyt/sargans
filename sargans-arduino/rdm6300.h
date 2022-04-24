@@ -9,27 +9,7 @@
 
 #include <Arduino.h>
 
-#if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_SAMD)
-	#define RDM6300_HARDWARE_SERIAL
-#endif
-
-#if !(defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_SAMD))
-	#define RDM6300_SOFTWARE_SERIAL
-#endif
-
-#ifdef RDM6300_HARDWARE_SERIAL
-	#ifdef ARDUINO_ARCH_SAMD
-		#include <Uart.h>
-		#define HardwareSerial_t Uart
-	#else
-		#include <HardwareSerial.h>
-		#define HardwareSerial_t HardwareSerial
-	#endif
-#endif
-#ifdef RDM6300_SOFTWARE_SERIAL
-	#include <SoftwareSerial.h>
-#endif
-
+#include <SoftwareSerial.h>
 #include <Stream.h>
 
 #define RDM6300_BAUDRATE				(9600)
@@ -48,19 +28,16 @@ class Rdm6300
 		void set_tag_timeout(uint32_t tag_timeout_ms);
 		uint32_t get_tag_id(void);
 		uint32_t get_new_tag_id(void);
-#ifdef RDM6300_SOFTWARE_SERIAL
+
 		void listen(void);
 		bool is_listening(void);
-#endif
+
 	private:
 		void _update(void);
 		uint32_t _read_tag_id(void);
-#ifdef RDM6300_HARDWARE_SERIAL
-		HardwareSerial_t *_hardware_serial = NULL;
-#endif
-#ifdef RDM6300_SOFTWARE_SERIAL
+
 		SoftwareSerial *_software_serial = NULL;
-#endif
+
 		Stream *_stream = NULL;
 		uint32_t _tag_id = 0;
 		uint32_t _new_tag_id = 0;

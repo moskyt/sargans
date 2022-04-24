@@ -99,8 +99,8 @@ https://www.czech-meanwell.cz/meanwell/RD-65B-Mean-Well-Spinany-zdroj-uzavreny-d
 SCK   SPI CLK (LED CLK)         CIPO  (NC)
 3V3   (NC)                      COPI  SPI COPI (LED DATA)
 AREF  (NC)                      D10~  LED CS
-D14   neopixel                  D9~   MP3 RX
-D15   rotary B                  D8/SS MP3 TX
+D14   neopixel                  D9~   (NC)
+D15   rotary B                  D8/SS (NC)
 D16   rotary A                  D7    signal1 red switch
 D17   rotary switch             D6~   (NC)
 SDA   I2C data (RTC)            D5~   (NC)
@@ -109,8 +109,8 @@ D20   clock-display clk         D3~   gleis 3 strip
 D21   clock-display data        D2    strip yellow switch
 5V    power bus +               GND   (NC)
 RST   (NC)                      RST   (NC)
-GND   power bus -               RX    (NC)
-VIN   (NC)                      TX    (NC)
+GND   power bus -               RX    MP3 RX
+VIN   (NC)                      TX    MP3 TX
 ```
 
 ### Zapojeni komponent na desku + kabely
@@ -184,6 +184,8 @@ InputDebounce - 1.6.0
 Rotary - 1.0.0
 
 DS3232RTC - 2.0.0
+
+DFPlayer Mini Mp3 by Makuna - 1.0.7
 
 ## Nadrazni hlaseni
 

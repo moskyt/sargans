@@ -71,7 +71,7 @@ const uint32_t wagon_uids[n_wagons] = {
 };
 
 #define BUF_SIZE  75
-char message[BUF_SIZE] = "Sargans SBB";
+char message[BUF_SIZE] = "Sargans";
 
 int playing_track = 0;
 
@@ -96,11 +96,10 @@ public:
   static void OnPlaySourceRemoved(DfMp3_PlaySources source) { }
 };
 
-//DFMiniMp3<HardwareSerial, Mp3Notify> mp3(Serial1);
-SoftwareSerial mp3Serial(pin_mp3_rx, pin_mp3_tx);
-DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(mp3Serial);
+DFMiniMp3<HardwareSerial, Mp3Notify> mp3(Serial1);
 
-const int mp3_volume = 28;
+// volume range is (0-30)
+const int mp3_volume = 26;
 
 int previous_wagon = -1;
 
@@ -131,7 +130,7 @@ void setup()
   // --- init RFID
   Serial.println(F("Init RFID..."));
   rdm6300.begin(pin_rdm6300);
-
+  
   // --- init LED banner
   Serial.println(F("Init banner..."));
   mx.begin();
@@ -146,10 +145,10 @@ void setup()
   Serial.println(F("Init clock..."));
   clock_display.setBrightness(0x02);
   uint8_t data[4];
-  data[0] = clock_display.encodeDigit(random(10));
-  data[1] = clock_display.encodeDigit(random(10));
-  data[2] = clock_display.encodeDigit(random(10));
-  data[3] = clock_display.encodeDigit(random(10));
+  data[0] = clock_display.encodeDigit(0);
+  data[1] = clock_display.encodeDigit(0);
+  data[2] = clock_display.encodeDigit(0);
+  data[3] = clock_display.encodeDigit(0);
   clock_display.setSegments(data);
 
   // --- init RTC
@@ -170,17 +169,11 @@ void setup()
   Serial.print(F("original volume: "));
   Serial.println(volume);
   mp3.setVolume(mp3_volume);
-  while (volume != mp3_volume) {
-    volume = mp3.getVolume();
-    Serial.print(F("new volume: "));
-    Serial.println(volume);
-    if (volume == 0) {
-      mp3.begin();
-    }
-    if (volume != mp3_volume) {
-      delay(500);
-      mp3.setVolume(mp3_volume);
-    }
+  volume = mp3.getVolume();
+  Serial.print(F("new volume: "));
+  Serial.println(volume);
+  if (volume == 0) {
+    mp3.begin();
   }
 
   uint16_t count = mp3.getTotalTrackCount(DfMp3_PlaySource_Sd);
@@ -248,7 +241,6 @@ void loop() {
 
       strip_blink_countdown = strip_blink_period * strip_blink_count;
 
-       //
       mp3.playMp3FolderTrack(current_wagon);
     }
   }
