@@ -48,7 +48,7 @@ https://www.laskakit.cz/rfid-ctecka-s-antenou-125khz-em4100-rdm6300/
 
 LED maticovy displej 32x8 MAX7219
 https://www.laskakit.cz/32x8-led-matice-s-max7219-3mm/
-TODO: vymenit za vetsi
+-- nasledne vymenen za stejny, ale sestimodulovy
 
 Indukcni smycka na svetla na vagonky
 https://www.adafruit.com/product/5141
@@ -73,12 +73,14 @@ https://www.laskakit.cz/rfid-em4100-125khz-neprepisovatelna-karta/
 
 MP3 prehravac MH2024K-24SS
 https://www.laskakit.cz/audio-mini-mp3-prehravac/
+logika je 3v3, takze na arduino TX - mp3 RX spojeni je 1.5k rezistor
+pozor, oba gnd piny musi byt propojene
 
-Zesilovac PAM8403 (pouziva se levy kanal)
-https://www.laskakit.cz/2x3w-digitalni-audio-zesilovac-pam8403/
+Zesilovac PAM8403 - s tim to nejak nedopadlo, ale narocnost odstraneni byla prilis vysoka
 
 Reproduktor 3W / 4R
 https://www.laskakit.cz/reproduktor-3w-4-40mm/
+pripojeny na SPKR1/2 piny mp3 prehravace
 
 ### Napajeni
 
@@ -143,15 +145,17 @@ RFID
 - napajeci konektor R47-79 NC,VCC,GND
 - datovy konektor L47-51 DATA,NC,NC,NC,NC
 
-MP3 
-TODO
+MP3
+R14-R17 (RX,TX,GND,VCC cerna,bila,sediva,fialova)
+-- na desce je to smerem od vlastniho prehravace cerna,bila,sediva,fialova
 
-### Mechanicke poznamky
+### Poznamky
 
 EIC napajeci zasuvka je pripojena pres vypinac (na L zile) na vstup AC/DC zdroje.
 
-Micro USB vyvedeny na vnejsi stenu je primo vytazeny z arduina. Asi nejlepsi napad je vypnout 5V/24V napajeni pred pripojenim USB kabelu, i kdyz je mozne, ze to neni uplne nutne. Pri vypnuti napajeni je ovsem trochu problem, ze vsechny komponenty jsou napajeny skrz Arduino, coz neni nejzdravejsi (problem je zejmena LED displej, ktery je schopen pri maximalnim rozsviceni odberu 1500 mA).
-* mozna by se dal displej udelat vypinaci
+Micro USB vyvedeny na vnejsi stenu je primo vytazeny z arduina. Asi nejlepsi napad je vypnout 5V/24V napajeni pred pripojenim USB kabelu, i kdyz je mozne, ze to neni uplne nutne. Pri vypnuti napajeni je ovsem trochu problem, ze vsechny komponenty jsou napajeny skrz Arduino, coz neni nejzdravejsi (problem je zejmena LED displej, ktery je schopen pri maximalnim rozsviceni odberu 1500 mA). Stejne tak MP3. Ale snad to neni megaproblem.
+
+Zustal tam bogus 4-pin napojeny na piny 8 a 9 a vcc+gnd, puvodne tam byl mp3, nez se zjistilo, ze to nejde.
 
 ## Software
 
@@ -160,6 +164,8 @@ Micro USB vyvedeny na vnejsi stenu je primo vytazeny z arduina. Asi nejlepsi nap
 nelze pouzit MD_Parola knihovnu na LED displej, bud s necim koliduje, nebo zacne prepisovat nejakou pamet, ale jakkoli 'funguje', tak zacne zpusobovat nepochopitelne problemy zabranujici nahravani sketche...
 
 nastaveni RTC hodin neni udelane nijak chytre, v pripade potreby se provede jednorazovym odkomentovanim dvou radku v setup()
+
+trochu zrada je, ze jak mp3, tak rfid pouzivaji uart. vzhledem k tomu, ze nejde pouzit (snadno) dva softwarove uarty najednou, je mp3 pripojeny na hw uart (piny rx+tx), rfid pak potrebuje jen rx pin a ten je SW.
 
 ### Knihovny
 
@@ -185,7 +191,7 @@ Adresar `ansagen` obsahuje dva seznamy `departures-actual_sargans` (skutecne vla
 
 ### timetable
 
-Generuje `departures.json`, ktery obsahuje uz konkretne pripraveny 48-prvkovy dataset pro jednotlive vagonky. 
+Generuje `departures.json`, ktery obsahuje uz konkretne pripraveny 48-prvkovy dataset pro jednotlive vagonky.
 
 Texty jsou ve variante `text` pro displej a `voice` pro text-to-speech syntetizer (format SSML).
 
@@ -228,12 +234,3 @@ Generuje MP3 hlaseni v adresari `ansagen/mp3`. Postup je nasledujici:
 
 Je potreba mit nakonfigurovany AWS CLI, resp. vygenerovany konfigurak (pomoci `aws configure` nebo rucne).
 
-## Poznamky / WIP
-
-TODO: mp3
-
-TODO: napajeni 5v
-
-VNITRNI ROZMER 120mm
-
-VZDALENOST NAVESTIDEL 200mm
