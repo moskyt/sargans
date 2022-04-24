@@ -1,4 +1,3 @@
-// system libraries
 #include <Arduino.h>
 #include <MD_MAX72xx.h>
 #include <TM1637Display.h>
@@ -6,16 +5,17 @@
 #include <InputDebounce.h>
 #include <Rotary.h>
 #include <DS3232RTC.h>
+#include <SoftwareSerial.h>
+#include <DFMiniMp3.h>
 
 // bundled libraries
 #define RDM6300_SOFTWARE_SERIAL
 #include "rdm6300.h"
 
-// data
 #include "destinations.h"
 
 // debouncing delay for buttons in ms
-const int button_debounce_delay = 20; 
+const int button_debounce_delay = 20;
 const int strip_blink_period = 10;
 const int strip_blink_count = 10;
 
@@ -34,7 +34,8 @@ const int pin_led_cs = 10;
 const int pin_strip_switch = 2;
 const int pin_strip = 3; // pwm needed
 const int pin_rdm6300 = 4;
-const int pin_speaker = 5; // pwm needed
+const int pin_mp3_rx = 9;
+const int pin_mp3_tx = 8;
 const int pin_signal1_switch = 7;
 const int pin_neopixel = 14;
 const int pin_rotary_switch = 17;
@@ -42,14 +43,13 @@ const int pin_rotary_a = 15;
 const int pin_rotary_b = 16;
 const int pin_clockdisplay_clk = 20;
 const int pin_clockdisplay_data = 21;
-const int pin_mp3_rx = 9;
-const int pin_mp3_tx = 8;  
+
 
 // RFID reader
 Rdm6300 rdm6300;
 // LED banner -- unfortunately, PAROLA cannot be used (insane mmry requirements)
 MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::FC16_HW, pin_led_cs, N_LED_BLOCKS);
-// neopixels 
+// neopixels
 Adafruit_NeoPixel pixels(2, pin_neopixel, NEO_GRB + NEO_KHZ800);
 // 4-digit clock display
 TM1637Display clock_display(pin_clockdisplay_clk, pin_clockdisplay_data);
@@ -72,6 +72,35 @@ const uint32_t wagon_uids[n_wagons] = {
 
 #define BUF_SIZE  75
 char message[BUF_SIZE] = "Sargans SBB";
+
+int playing_track = 0;
+
+// MP3 player notifier
+class Mp3Notify {
+public:
+  static void OnError(uint16_t errorCode)
+  {
+    // see DfMp3_Error for code meaning
+    Serial.println();
+    Serial.print("MP3 com Error ");
+    Serial.println(errorCode);
+  }
+  static void OnPlayFinished(DfMp3_PlaySources source, uint16_t track)
+  {
+    Serial.print("Play finished for #");
+    Serial.println(track);
+    playing_track = 0;
+  }
+  static void OnPlaySourceOnline(DfMp3_PlaySources source) { }
+  static void OnPlaySourceInserted(DfMp3_PlaySources source) { }
+  static void OnPlaySourceRemoved(DfMp3_PlaySources source) { }
+};
+
+//DFMiniMp3<HardwareSerial, Mp3Notify> mp3(Serial1);
+SoftwareSerial mp3Serial(pin_mp3_rx, pin_mp3_tx);
+DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(mp3Serial);
+
+const int mp3_volume = 28;
 
 int previous_wagon = -1;
 
@@ -112,7 +141,7 @@ void setup()
   mx.setShiftDataOutCallback(scrollDataSink);
 
   // setScrollMessage(message);
-  
+
   // --- init clock display
   Serial.println(F("Init clock..."));
   clock_display.setBrightness(0x02);
@@ -128,10 +157,36 @@ void setup()
 
   // --- set RTC time
   // this is a super-not-nice way to handle this. just set it and uncomment here.
-  // might not be needed anymore!    
+  // might not be needed anymore!
   //setTime( 11, 20,  0, 24, 4, 2022);   // H M S , D M Y
   //rtc.set(now());
-  
+
+  // --- init MP3
+  Serial.println(F("Init MP3..."));
+
+  mp3.begin();
+
+  uint16_t volume = mp3.getVolume();
+  Serial.print(F("original volume: "));
+  Serial.println(volume);
+  mp3.setVolume(mp3_volume);
+  while (volume != mp3_volume) {
+    volume = mp3.getVolume();
+    Serial.print(F("new volume: "));
+    Serial.println(volume);
+    if (volume == 0) {
+      mp3.begin();
+    }
+    if (volume != mp3_volume) {
+      delay(500);
+      mp3.setVolume(mp3_volume);
+    }
+  }
+
+  uint16_t count = mp3.getTotalTrackCount(DfMp3_PlaySource_Sd);
+  Serial.print(F("number of mp3 files: "));
+  Serial.println(count);
+
   // --- init neopixels (traffic signals)
   Serial.println(F("Init neopixels..."));
   pixels.begin();
@@ -143,7 +198,7 @@ void setup()
   pinMode(pin_rotary_a, INPUT);
   pinMode(pin_rotary_b, INPUT);
   rotary.setChangedHandler(rotate);
-  
+
   // --- init the buttons
   rotary_button.registerCallbacks(rotary_button_pressedCallback, NULL, NULL, NULL);
   rotary_button.setup(pin_rotary_switch, button_debounce_delay, InputDebounce::PIM_INT_PULL_UP_RES);
@@ -186,9 +241,15 @@ void loop() {
     if (current_wagon > -1 && current_wagon != previous_wagon) {
       Serial.print(F(" => printing message "));
       Serial.println(destinations[current_wagon]);
+
       setScrollMessage(destinations[current_wagon]);
+
       previous_wagon = current_wagon;
+
       strip_blink_countdown = strip_blink_period * strip_blink_count;
+
+       //
+      mp3.playMp3FolderTrack(current_wagon);
     }
   }
 
@@ -196,35 +257,35 @@ void loop() {
   tmElements_t tm;
   rtc.read(tm);
   bool blink = (tm.Second % 2 > 0);
-  clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true); 
+  clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true);
 
   // --- show the signals
   if (signal1 == S1_RED) {
-    pixels.setPixelColor(0, pixels.Color(neo_intensity, 0, 0));   
+    pixels.setPixelColor(0, pixels.Color(neo_intensity, 0, 0));
   } else
   if (signal1 == S1_GREEN) {
-    pixels.setPixelColor(0, pixels.Color(0, neo_intensity, 0));   
+    pixels.setPixelColor(0, pixels.Color(0, neo_intensity, 0));
   }
   if (!signal2_enabled) {
     pixels.setPixelColor(1, pixels.Color(0, 0, 0));
   } else
   if (signal2 == S2_RED) {
-    pixels.setPixelColor(1, pixels.Color(neo_intensity, 0, 0));   
+    pixels.setPixelColor(1, pixels.Color(neo_intensity, 0, 0));
   } else
   if (signal2 == S2_GREEN) {
-    pixels.setPixelColor(1, pixels.Color(0, neo_intensity, 0));   
+    pixels.setPixelColor(1, pixels.Color(0, neo_intensity, 0));
   }
   if (signal2 == S2_BLUE_BLINK) {
     if (blink)
-      pixels.setPixelColor(1, pixels.Color(0, 0, neo_intensity));   
+      pixels.setPixelColor(1, pixels.Color(0, 0, neo_intensity));
     else
-      pixels.setPixelColor(1, pixels.Color(neo_intensity, neo_intensity, neo_intensity));   
+      pixels.setPixelColor(1, pixels.Color(neo_intensity, neo_intensity, neo_intensity));
   }
   if (signal2 == S2_ORANGE_BLINK) {
     if (blink)
-      pixels.setPixelColor(1, pixels.Color(neo_intensity, neo_intensity, 0));   
+      pixels.setPixelColor(1, pixels.Color(neo_intensity, neo_intensity, 0));
     else
-      pixels.setPixelColor(1, pixels.Color(0, 0, 0));   
+      pixels.setPixelColor(1, pixels.Color(0, 0, 0));
   }
   pixels.show();
 
@@ -235,13 +296,16 @@ void loop() {
     if (m % 2 == 0)
       analogWrite(pin_strip, 250);
     else
-      analogWrite(pin_strip, 0);  
+      analogWrite(pin_strip, 0);
   } else {
     if (strip_enabled)
       analogWrite(pin_strip, 50);
     else
-      analogWrite(pin_strip, 0);  
+      analogWrite(pin_strip, 0);
   }
+
+  // --- poll MP3
+  mp3.loop();
 
   delay(10);
 }
