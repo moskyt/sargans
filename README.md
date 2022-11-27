@@ -93,15 +93,18 @@ https://www.czech-meanwell.cz/meanwell/RD-65B-Mean-Well-Spinany-zdroj-uzavreny-d
 24V - napaji indukcni civku a LED pasky
 -- rozvedene pres mirne predimenzovane svorkovnice
 
-### Pinout pro arduino
+### Pinout / zapojeni
 
+#### Arduino Nano Every
+
+(usb portem nahoru)
 ```
 SCK   SPI CLK (LED CLK)         CIPO  (NC)
 3V3   (NC)                      COPI  SPI COPI (LED DATA)
 AREF  (NC)                      D10~  LED CS
 D14   neopixel                  D9~   (NC)
 D15   rotary B                  D8/SS (NC)
-D16   rotary A                  D7    signal1 red switch
+D16   rotary A                  D7    (NC)
 D17   rotary switch             D6~   (NC)
 SDA   I2C data (RTC)            D5~   (NC)
 SDC   I2C clk (RTC)             D4    rfid
@@ -109,11 +112,85 @@ D20   clock-display clk         D3~   gleis 3 strip
 D21   clock-display data        D2    strip yellow switch
 5V    power bus +               GND   (NC)
 RST   (NC)                      RST   (NC)
-GND   power bus -               RX    MP3 RX
-VIN   (NC)                      TX    MP3 TX
+GND   power bus -               RX    MP3 TX
+VIN   (NC)                      TX    MP3 RX+R
 ```
 
-### Zapojeni komponent na desku + kabely
+#### DFPlayer mini
+
+(SD slotem dolu)
+```
+L19 VCC               x
+L20 RX -> [TX]+R      x
+L21 TX -> [RX]        x
+L22 x                 x
+L23 x                 x
+L24 SPKR1             x
+L25 GND               GND
+L26 SPKR2             x
+```
+
+#### Speaker
+
+L26 -> MP3 SPKR2
+L27 -> MP3 SPKR1
+
+#### RFID EM4100 RDM6300
+
+(popiskem a antenou dolu)
+```
+L35 DATA -> [D4]    R35 x
+L36 x               R36 VCC -> +
+L37 x               R37 GND -> -
+L38 x
+L39 x
+                    R47 ANT
+                    R48 ANT
+```
+
+#### LED
+(VCC,GND,DATA,CS,CLK bila,modra,cervena,zelena,cerna)
+R28 VCC  -> +
+R29 GND  -> -
+R30 DATA -> [COPI] cervena
+R31 CS   -> [D10] zelena
+R32 CLK  -> [SCK] modra
+
+#### hodinovy displej
+(VCC,GND,DATA,CLK zelena,cervena,modra,cerna)
+L29 VCC  -> +
+L30 GND  -> -
+L31 DATA -> [D21] modra
+L32 CLK  -> [D20] cerna
+
+#### MOSFET (gleis 3 strip)
+L40 GND -> -
+L41 VCC -> +
+L42 SIG -> [D3]
+
+#### Neopixel
+(VCC,DATA,GND cervena,hneda,cerna)
+L50 VCC  -> +
+L51 DATA -> [D14]
+L52 GND  -> -
+
+#### Rotary switch
+(GND,VCC,SWITCH,A,B cerna,zelena,cervena,modra,bila)
+x
+x
+x
+x
+x
+
+#### RTC modul
+TBD
+
+#### zlute tlacitko
+L54 -> [D2]
+L55 -> -
+
+
+=== nize stare zabite
 
 5V napajeni
 v rohu

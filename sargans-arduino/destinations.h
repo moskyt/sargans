@@ -1,6 +1,6 @@
 const char destinations[48][47] = {
-  "EC 193 | Memmingen, München Hbf",                    //    1   v1/1
-  "IR 35 | Zürich HB, Bern",                            //    2   v2/1
+  "EC 193 | Memmingen, Muenchen Hbf",                    //    1   v1/1
+  "IR 35 | Zuerich HB, Bern",                            //    2   v2/1
   "RE 54 | Versam-Safien, Ilanz",                       //    3   v1/2
   "IR 54 | Arosa",                                      //    4   v2/2
   "IC 3 | Basel",                                       //    5   v1/3
@@ -24,16 +24,16 @@ const char destinations[48][47] = {
   "IC 51 | Konstanz",                                   //
   "RE | Heerbrugg, St. Gallen",                         //
   "RE 55 | Lavin, Scuol-Tarasp",                        //
-  "RJX | Zürich HB",                                    //
+  "RJX | Zuerich HB",                                    //
   "S12 | Landquart, Chur",                              //
   "ICE | Basel Bad Bahnhof, Hamburg-Altona",            //
   "S4 | Rorschach, Wattwil",                            //
   "IR 35 | Chur",                                       //
-  "RE 53 | Alstätten, Appenzell",                       //
+  "RE 53 | Alstaetten, Appenzell",                       //
   "RE 51 | Klosters, Susch",                            //
   "S4 | Walenstadt, Uznach",                            //
   "IC 3 | Chur",                                        //
-  "TGV 9580 | Belfort-Montbéliard, Lyon Part Dieu",     //
+  "TGV 9580 | Belfort-Montbeliard, Lyon Part Dieu",     //
   "IR 51 | Wintherthur, Schaffhausen",                  //
   "IR 53 | Andermatt",                                  //
   "IR 55 | Zernez, Tirano",                             //
@@ -43,7 +43,7 @@ const char destinations[48][47] = {
   "IR 52 | Tarasp",                                     //
   "IR 55 | Appenzell",                                  //
   "S4 | Rorschach, Herisau",                            //
-  "RE 52 | Siebnen-Wangen, Pfäffikon",                  //
+  "RE 52 | Siebnen-Wangen, Pfaeffikon",                  //
   "RJX | Salzburg Hbf",                                 //
   "IC 55 | Oerlikon, Aarau",                            //
   "IC 56 | Koblenz, Basel"                              //

@@ -6,7 +6,7 @@ eps = 0.1;
 
 plate_t = 2;
 hole_t = 3.5;
-hole_d = 6;
+hole_d = 5.5;
 plate_d = 8;
 screw_d = 3;
 tab_w = 6;

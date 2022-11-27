@@ -24,7 +24,7 @@ const int strip_blink_count = 10;
 #define SCROLL_DELAY 4
 #define CHAR_SPACING 1
 
-// max intensity of neopixel (signals)
+// max intensity of neopixel (signal)
 const int neo_intensity = 20;
 
 // RTC CLOCK: I2C
@@ -36,7 +36,6 @@ const int pin_strip = 3; // pwm needed
 const int pin_rdm6300 = 4;
 const int pin_mp3_rx = 9;
 const int pin_mp3_tx = 8;
-const int pin_signal1_switch = 7;
 const int pin_neopixel = 14;
 const int pin_rotary_switch = 17;
 const int pin_rotary_a = 15;
@@ -49,8 +48,8 @@ const int pin_clockdisplay_data = 21;
 Rdm6300 rdm6300;
 // LED banner -- unfortunately, PAROLA cannot be used (insane mmry requirements)
 MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::FC16_HW, pin_led_cs, N_LED_BLOCKS);
-// neopixels
-Adafruit_NeoPixel pixels(2, pin_neopixel, NEO_GRB + NEO_KHZ800);
+// neopixel
+Adafruit_NeoPixel pixels(1, pin_neopixel, NEO_GRB + NEO_KHZ800);
 // 4-digit clock display
 TM1637Display clock_display(pin_clockdisplay_clk, pin_clockdisplay_data);
 // RTC
@@ -60,14 +59,39 @@ DS3232RTC rtc;
 Rotary rotary = Rotary(pin_rotary_a, pin_rotary_b);
 InputDebounce rotary_button;
 InputDebounce strip_button;
-InputDebounce signal1_button;
 
-const int n_wagons = 4;
+const int n_wagons = 24;
 const uint32_t wagon_uids[n_wagons] = {
-  273606,
-  337311,
-  361829,
-  186263
+  // bogus testies
+  290408,
+  186263,
+  // real ones blow
+  //361829,
+  //337311,
+  343835,
+  228613,
+  228912,
+  235002,
+  250535,
+  345008,
+  252786,
+  365067,
+
+  355662,
+  344216,
+  344639,
+  341953,
+  339081,
+  364832,
+  258877,
+  322125,
+  203792,
+  338900,
+
+  566517,
+  348127,
+  329005,
+  451390
 };
 
 #define BUF_SIZE  75
@@ -75,42 +99,42 @@ char message[BUF_SIZE] = "Sargans";
 
 int playing_track = 0;
 
+class Mp3Notify; 
+typedef DFMiniMp3<HardwareSerial, Mp3Notify> DfMp3; 
+
 // MP3 player notifier
 class Mp3Notify {
 public:
-  static void OnError(uint16_t errorCode)
+  static void OnError(DfMp3& mp3,uint16_t errorCode)
   {
     // see DfMp3_Error for code meaning
     Serial.println();
     Serial.print("MP3 com Error ");
     Serial.println(errorCode);
   }
-  static void OnPlayFinished(DfMp3_PlaySources source, uint16_t track)
+  static void OnPlayFinished(DfMp3& mp3, DfMp3_PlaySources source, uint16_t track)
   {
     Serial.print("Play finished for #");
     Serial.println(track);
     playing_track = 0;
   }
-  static void OnPlaySourceOnline(DfMp3_PlaySources source) { }
-  static void OnPlaySourceInserted(DfMp3_PlaySources source) { }
-  static void OnPlaySourceRemoved(DfMp3_PlaySources source) { }
+  static void OnPlaySourceOnline(DfMp3& mp3,DfMp3_PlaySources source) { }
+  static void OnPlaySourceInserted(DfMp3& mp3,DfMp3_PlaySources source) { }
+  static void OnPlaySourceRemoved(DfMp3& mp3,DfMp3_PlaySources source) { }
 };
 
-DFMiniMp3<HardwareSerial, Mp3Notify> mp3(Serial1);
+DfMp3 mp3(Serial1);
 
 // volume range is (0-30)
 const int mp3_volume = 26;
 
 int previous_wagon = -1;
 
-enum signal1_mode {S1_GREEN, S1_RED};
-signal1_mode signal1 = S1_RED;
-
-const int signal2_mode_count = 4;
-const int signal2_mode_multiplier = 6;
-enum signal2_mode {S2_GREEN, S2_RED, S2_ORANGE_BLINK, S2_BLUE_BLINK};
-signal2_mode signal2 = S2_RED;
-bool signal2_enabled = true;
+const int signal_mode_count = 4;
+const int signal_mode_multiplier = 6;
+enum signal_mode {SIG_GREEN, SIG_RED, SIG_ORANGE_BLINK, SIG_BLUE_BLINK};
+signal_mode signal = SIG_RED;
+bool signal_enabled = false;
 
 bool strip_enabled = false;
 
@@ -119,9 +143,17 @@ int strip_blink_countdown = 0;
 void setup()
 {
   Serial.begin(115200);
-  delay(2000); // just a small delay
+  delay(2000); // just a small delay for the Serial
 
   Serial.println(F("Hello from Sargans!"));
+
+  // --- init neopixel (traffic signal)
+  Serial.println(F("Init neopixel..."));
+  pixels.begin();
+  pixels.clear();
+  pixels.setPixelColor(0, pixels.Color(0, neo_intensity, 0));
+  pixels.show();
+  delay(500); // just a small delay without any meaning
 
   // --- init pins not handled separately
   pinMode(pin_strip, OUTPUT);
@@ -130,7 +162,12 @@ void setup()
   // --- init RFID
   Serial.println(F("Init RFID..."));
   rdm6300.begin(pin_rdm6300);
-  
+  delay(500); // just a small delay without any meaning
+
+  // change init signal to blue
+  pixels.setPixelColor(0, pixels.Color(0, 0, neo_intensity));
+  pixels.show();
+
   // --- init LED banner
   Serial.println(F("Init banner..."));
   mx.begin();
@@ -138,6 +175,7 @@ void setup()
   printText(0, N_LED_BLOCKS-1, message);
   mx.setShiftDataInCallback(scrollDataSource);
   mx.setShiftDataOutCallback(scrollDataSink);
+  delay(500); // just a small delay without any meaning
 
   // setScrollMessage(message);
 
@@ -145,14 +183,15 @@ void setup()
   Serial.println(F("Init clock..."));
   clock_display.setBrightness(0x02);
   uint8_t data[4];
-  data[0] = clock_display.encodeDigit(0);
-  data[1] = clock_display.encodeDigit(0);
+  data[0] = clock_display.encodeDigit(9);
+  data[1] = clock_display.encodeDigit(3);
   data[2] = clock_display.encodeDigit(0);
-  data[3] = clock_display.encodeDigit(0);
+  data[3] = clock_display.encodeDigit(2);
   clock_display.setSegments(data);
+  delay(500); // just a small delay without any meaning
 
   // --- init RTC
-  rtc.begin();
+  // rtc.begin();
 
   // --- set RTC time
   // this is a super-not-nice way to handle this. just set it and uncomment here.
@@ -162,6 +201,7 @@ void setup()
 
   // --- init MP3
   Serial.println(F("Init MP3..."));
+  delay(500); // just a small delay without any meaning
 
   mp3.begin();
 
@@ -180,31 +220,25 @@ void setup()
   Serial.print(F("number of mp3 files: "));
   Serial.println(count);
 
-  // --- init neopixels (traffic signals)
-  Serial.println(F("Init neopixels..."));
-  pixels.begin();
-  pixels.clear();
-  pixels.show();
-
   // --- init rotary switch
-  Serial.println(F("Init rotary..."));
-  pinMode(pin_rotary_a, INPUT);
-  pinMode(pin_rotary_b, INPUT);
-  rotary.setChangedHandler(rotate);
+  //Serial.println(F("Init rotary..."));
+  //pinMode(pin_rotary_a, INPUT);
+  //pinMode(pin_rotary_b, INPUT);
+  //rotary.setChangedHandler(rotate);
 
   // --- init the buttons
   rotary_button.registerCallbacks(rotary_button_pressedCallback, NULL, NULL, NULL);
   rotary_button.setup(pin_rotary_switch, button_debounce_delay, InputDebounce::PIM_INT_PULL_UP_RES);
   strip_button.registerCallbacks(strip_button_pressedCallback, NULL, NULL, NULL);
   strip_button.setup(pin_strip_switch, button_debounce_delay, InputDebounce::PIM_INT_PULL_UP_RES);
-  signal1_button.registerCallbacks(signal1_button_pressedCallback, NULL, NULL, NULL);
-  signal1_button.setup(pin_signal1_switch, button_debounce_delay, InputDebounce::PIM_INT_PULL_UP_RES);
+  delay(500); // just a small delay without any meaning
 
   Serial.println(F("Init done."));
 }
 
 void loop() {
   unsigned long now = millis();
+  bool blink = true;
 
   // --- process the LED banner display
   scrollText();
@@ -215,7 +249,6 @@ void loop() {
   // --- process the buttons
   rotary_button.process(now);
   strip_button.process(now);
-  signal1_button.process(now);
 
   // --- process RFID
   if (rdm6300.get_new_tag_id()) {
@@ -241,43 +274,37 @@ void loop() {
 
       strip_blink_countdown = strip_blink_period * strip_blink_count;
 
-      mp3.playMp3FolderTrack(current_wagon);
+      mp3.playMp3FolderTrack(current_wagon+1);
     }
   }
 
   // --- show the clock + init the blink flag
-  tmElements_t tm;
-  rtc.read(tm);
-  bool blink = (tm.Second % 2 > 0);
-  clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true);
-
+  //tmElements_t tm;
+  //rtc.read(tm);
+  // blink = (tm.Second % 2 > 0);
+  //clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true);
+  
   // --- show the signals
-  if (signal1 == S1_RED) {
+  if (!signal_enabled) {
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0));
+  } else
+  if (signal == SIG_RED) {
     pixels.setPixelColor(0, pixels.Color(neo_intensity, 0, 0));
   } else
-  if (signal1 == S1_GREEN) {
+  if (signal == SIG_GREEN) {
     pixels.setPixelColor(0, pixels.Color(0, neo_intensity, 0));
   }
-  if (!signal2_enabled) {
-    pixels.setPixelColor(1, pixels.Color(0, 0, 0));
-  } else
-  if (signal2 == S2_RED) {
-    pixels.setPixelColor(1, pixels.Color(neo_intensity, 0, 0));
-  } else
-  if (signal2 == S2_GREEN) {
-    pixels.setPixelColor(1, pixels.Color(0, neo_intensity, 0));
-  }
-  if (signal2 == S2_BLUE_BLINK) {
+  if (signal == SIG_BLUE_BLINK) {
     if (blink)
-      pixels.setPixelColor(1, pixels.Color(0, 0, neo_intensity));
+      pixels.setPixelColor(0, pixels.Color(0, 0, neo_intensity));
     else
-      pixels.setPixelColor(1, pixels.Color(neo_intensity, neo_intensity, neo_intensity));
+      pixels.setPixelColor(0, pixels.Color(neo_intensity, neo_intensity, neo_intensity));
   }
-  if (signal2 == S2_ORANGE_BLINK) {
+  if (signal == SIG_ORANGE_BLINK) {
     if (blink)
-      pixels.setPixelColor(1, pixels.Color(neo_intensity, neo_intensity, 0));
+      pixels.setPixelColor(0, pixels.Color(neo_intensity, neo_intensity, 0));
     else
-      pixels.setPixelColor(1, pixels.Color(0, 0, 0));
+      pixels.setPixelColor(0, pixels.Color(0, 0, 0));
   }
   pixels.show();
 
@@ -302,16 +329,10 @@ void loop() {
   delay(10);
 }
 
-void signal1_button_pressedCallback(uint8_t pinIn) {
-  Serial.print(F("Red switch (signal1) pressed -> "));
-  signal1 = (signal1 == S1_RED) ? S1_GREEN : S1_RED;
-  Serial.println(signal2_enabled);
-}
-
 void rotary_button_pressedCallback(uint8_t pinIn) {
-  Serial.print(F("Rotary switch (signal2) pressed -> "));
-  signal2_enabled = !signal2_enabled;
-  Serial.println(signal2_enabled);
+  Serial.print(F("Rotary switch (signal) pressed -> "));
+  signal_enabled = !signal_enabled;
+  Serial.println(signal_enabled);
 }
 
 void strip_button_pressedCallback(uint8_t pinIn) {
@@ -323,9 +344,9 @@ void strip_button_pressedCallback(uint8_t pinIn) {
 // on rotary change
 void rotate(Rotary& r) {
   int rpos = r.getPosition();
-  signal2 = (rpos / 2) % signal2_mode_count;
+  signal = (rpos / 2) % signal_mode_count;
   Serial.print(F("Rotated the encoder to pos = "));
   Serial.print(rpos);
-  Serial.print(F(" / signal2 = "));
-  Serial.println(signal2);
+  Serial.print(F(" / signal = "));
+  Serial.println(signal);
 }

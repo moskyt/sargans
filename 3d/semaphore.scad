@@ -16,13 +16,13 @@ post_d = 10;
 channel_d = 8;
 post_h = 5;
 
-block_w = 30;
+block_w = 22;
 nub_h = 5;
 diode_hole_h = nub_h + 7.2;
 block_t = 2;
 nub_d = 3.2;
 nub_spacing = 12.9;
-diode_d = 8;
+diode_d = 6;
 
 base_t = 5;
 base_d = 20;
@@ -34,7 +34,7 @@ groove_d = 2;
 groove_eps = 0.2;
 
 
-back(-40)
+back(-50)
 color("red") down(base_t)
 union() {
 difference() {
@@ -46,8 +46,8 @@ cuboid([block_w,base_d, box_h], anchor=BOTTOM);
 }
 fwd(block_t)
 up(base_t/2) {
-    xcopies(block_w-groove_d+2*eps,2)
-    cuboid([groove_d+eps,base_d,base_t/2]);
+    xcopies(block_w-groove_d+2*groove_eps,2)
+    cuboid([groove_d-groove_eps,base_d,base_t/2-2*groove_eps]);
 }
 }
 
@@ -76,8 +76,8 @@ ycyl(4*block_t,d=diode_d);
 
 fwd(block_t+groove_eps)
 down(base_t/2) {
-    xcopies(block_w-groove_d+2*eps+2*groove_eps,2)
-    cuboid([groove_d+eps-groove_eps,base_d-2*groove_eps,base_t/2-groove_eps]);
+    xcopies(block_w-groove_d+2*groove_eps,2)
+    cuboid([groove_d+groove_eps,base_d+2*groove_eps,base_t/2-groove_eps]);
 }
 
 
