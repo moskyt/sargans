@@ -174,6 +174,8 @@ L50 VCC  -> +
 L51 DATA -> [D14]
 L52 GND  -> -
 
+! prodluzka
+
 #### Rotary switch
 (GND,VCC,SWITCH,A,B cerna,zelena,cervena,modra,bila)
 x
@@ -183,7 +185,15 @@ x
 x
 
 #### RTC modul
-TBD
+
+posledni dva jsou uplne nezapojene, vorsicht
+
+GND -> -
+VCC -> +
+SDA -> [SDA]
+SCL -> [SCL]
+xxx
+xxx
 
 #### zlute tlacitko
 L54 -> [D2]
