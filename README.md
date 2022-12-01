@@ -4,11 +4,10 @@ Firmware pro nadrazi z adventniho kalendare 2022.
 
 ## Popis funkci
 
-vjezdove navestidlo (c.1) - mezi zelenou a cervenou se prepina cervenym tlacitkem
+navestidlo - mezi ctyrmi rezimy se prepina otacenim knofliku, vypina a zapina se stiskem tehoz
+*MOC NEFUNGUJE* a priznam se, ze uplne nevim proc. je to zahadne naladovy.
 
-odjezdove navestidlo (c.2) - mezi ctyrmi rezimy se prepina otacenim knofliku, vypina a zapina se stiskem tehoz
-
-hodiny: normalne ukazuji hodiny (na stridacku s datem), pripadne cislo vagonku (1/2,mezera,dvojciferne cislo)
+hodiny: normalne ukazuji hodiny (s RTC)
 
 LED displej - ukazuje linku a destinaci po prijezdu vagonku
 
@@ -26,9 +25,7 @@ je 24V indukcni civka, rozsveci se svetylka na vagoncich
 
 - rozblika se osvetleni koleje
 - na LED banneru se zobrazi linka / destinace
-- zahraje se melodie na vagonku a to:
-a) pokud je dnes den daneho vagonku, tak pro Vorsilu Old McDonald's a pro Vlka Tschipfu-tschi en Isebahn chunnt
-b) v ostatni dny prislusna zeleznicni znelka (SBB, CFF, FFS, SNCF, DB) + hlaseni
+- prehraje se prislusna zeleznicni znelka (SBB, CFF, FFS, SNCF, DB) + hlaseni
 
 ### Hlaseni
 
@@ -54,7 +51,7 @@ Indukcni smycka na svetla na vagonky
 https://www.adafruit.com/product/5141
 
 RTC hodiny DS3231
-https://www.laskakit.cz/rtc-hodiny-realneho-casu-ds3231--integrovana-baterie/
+https://www.gme.cz/modul-rtc-ds323-i2c-a-32kb-flash
 
 Hodinovy displej TM1637
 https://www.laskakit.cz/hodinovy-displej-0-36--tm1637/
@@ -76,8 +73,6 @@ https://www.laskakit.cz/audio-mini-mp3-prehravac/
 logika je 3v3, takze na arduino TX - mp3 RX spojeni je 1.5k rezistor
 pozor, oba gnd piny musi byt propojene
 
-Zesilovac PAM8403 - s tim to nejak nedopadlo, ale narocnost odstraneni byla prilis vysoka
-
 Reproduktor 3W / 4R
 https://www.laskakit.cz/reproduktor-3w-4-40mm/
 pripojeny na SPKR1/2 piny mp3 prehravace
@@ -92,6 +87,9 @@ https://www.czech-meanwell.cz/meanwell/RD-65B-Mean-Well-Spinany-zdroj-uzavreny-d
 
 24V - napaji indukcni civku a LED pasky
 -- rozvedene pres mirne predimenzovane svorkovnice
+-> indukcni civka
+-> vnitrni LED stripy
+-> mosfet pro LED strip na 3. koleji
 
 ### Pinout / zapojeni
 
@@ -157,32 +155,33 @@ R31 CS   -> [D10] zelena
 R32 CLK  -> [SCK] modra
 
 #### hodinovy displej
+
 (VCC,GND,DATA,CLK zelena,cervena,modra,cerna)
+
 L29 VCC  -> +
 L30 GND  -> -
 L31 DATA -> [D21] modra
 L32 CLK  -> [D20] cerna
 
 #### MOSFET (gleis 3 strip)
+
+zapojeny primo do patice (soucastkami dovnitr)
+
 L40 GND -> -
 L41 VCC -> +
 L42 SIG -> [D3]
 
 #### Neopixel
+
 (VCC,DATA,GND cervena,hneda,cerna -> hneda, bila, cerna)
 L50 VCC  -> +
 L51 DATA -> [D14]
 L52 GND  -> -
 
-! prodluzka
+! prodluzka -- proto ty zmeny barev
 
 #### Rotary switch
 (GND,VCC,SWITCH,A,B cerna,zelena,cervena,modra,bila)
-x
-x
-x
-x
-x
 
 #### RTC modul
 
@@ -199,50 +198,11 @@ xxx
 L54 -> [D2]
 L55 -> -
 
-
-=== nize stare zabite
-
-5V napajeni
-v rohu
-
-zlute tlacitko
-R20-21
-
-cervene tlacitko
-R21-22
-
-neopixel (semafory)
-R25-27 (VCC,DATA,GND)
-
-rotary
-L19-L23 (GND,VCC,SWITCH,A,B cerna,zelena,cervena,modra,bila)
-
-hodinovy displej
-R53-56 (VCC,GND,DATA,CLK zelena,cervena,modra,cerna)
-
-RTC
-L52-55 (VCC,DATA,CLK,GND zluta,oranzova,cervena,hneda)
---- tohle je naprosty fail, mohlo to byt primo na desce
-
-LED
-L25-29 (VCC,GND,DATA,CS,CLK bila,modra,cervena,zelena,cerna)
-
-RFID
-- antenovy konektor R59-60 -- patice
-- napajeci konektor R47-79 NC,VCC,GND
-- datovy konektor L47-51 DATA,NC,NC,NC,NC
-
-MP3
-R14-R17 (RX,TX,GND,VCC cerna,bila,sediva,fialova)
--- na desce je to smerem od vlastniho prehravace cerna,bila,sediva,fialova
-
 ### Poznamky
 
 EIC napajeci zasuvka je pripojena pres vypinac (na L zile) na vstup AC/DC zdroje.
 
 Micro USB vyvedeny na vnejsi stenu je primo vytazeny z arduina. Asi nejlepsi napad je vypnout 5V/24V napajeni pred pripojenim USB kabelu, i kdyz je mozne, ze to neni uplne nutne. Pri vypnuti napajeni je ovsem trochu problem, ze vsechny komponenty jsou napajeny skrz Arduino, coz neni nejzdravejsi (problem je zejmena LED displej, ktery je schopen pri maximalnim rozsviceni odberu 1500 mA). Stejne tak MP3. Ale snad to neni megaproblem.
-
-Zustal tam bogus 4-pin napojeny na piny 8 a 9 a vcc+gnd, puvodne tam byl mp3, nez se zjistilo, ze to nejde.
 
 ## Software
 
@@ -262,7 +222,7 @@ RDM6300 - bundled
 
 MD_MAX72XX - 3.3.0
 
-Adafruit NeoPixel - 1.2.3
+Adafruit NeoPixel - 1.10.5
 
 TM1637 - 1.2.0
 
@@ -270,9 +230,9 @@ InputDebounce - 1.6.0
 
 Rotary - 1.0.0
 
-DS3232RTC - 2.0.0
+DS3232RTC - 2.0.1
 
-DFPlayer Mini Mp3 by Makuna - 1.0.7
+DFPlayer Mini Mp3 by Makuna - 1.1.0
 
 ## Nadrazni hlaseni
 
