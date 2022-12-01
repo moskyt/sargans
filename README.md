@@ -169,7 +169,7 @@ L41 VCC -> +
 L42 SIG -> [D3]
 
 #### Neopixel
-(VCC,DATA,GND cervena,hneda,cerna)
+(VCC,DATA,GND cervena,hneda,cerna -> hneda, bila, cerna)
 L50 VCC  -> +
 L51 DATA -> [D14]
 L52 GND  -> -

@@ -21,7 +21,7 @@ const int strip_blink_count = 10;
 
 // led settings
 #define N_LED_BLOCKS 6
-#define SCROLL_DELAY 4
+#define SCROLL_DELAY 8
 #define CHAR_SPACING 1
 
 // max intensity of neopixel (signal)
@@ -60,14 +60,10 @@ Rotary rotary = Rotary(pin_rotary_a, pin_rotary_b);
 InputDebounce rotary_button;
 InputDebounce strip_button;
 
-const int n_wagons = 24;
+const int n_wagons = 48;
 const uint32_t wagon_uids[n_wagons] = {
-  // bogus testies
-  290408,
-  186263,
-  // real ones blow
-  //361829,
-  //337311,
+  361829,
+  337311,
   343835,
   228613,
   228912,
@@ -91,7 +87,34 @@ const uint32_t wagon_uids[n_wagons] = {
   566517,
   348127,
   329005,
-  451390
+  451390,
+  290408,
+  267758,
+  186263,
+  473183,
+  911862,
+  417940,
+  
+  477636,
+  279181,
+  // bacha prohazuju spatne nalepeny destinace 33-34, nutno otestovat
+  285480, //451356,
+  451356, //285480,
+  293895,
+  248222,
+  486233,
+  187191,
+  342310,
+  359534,
+  
+  273863,
+  320530,
+  504735,
+  562113,
+  538614,
+  553631,
+  413229,
+  273606
 };
 
 #define BUF_SIZE  75
@@ -191,14 +214,24 @@ void setup()
   delay(500); // just a small delay without any meaning
 
   // --- init RTC
-  // rtc.begin();
+  Serial.println(F("Init RTC..."));
+  rtc.begin();
 
   // --- set RTC time
   // this is a super-not-nice way to handle this. just set it and uncomment here.
   // might not be needed anymore!
-  //setTime( 11, 20,  0, 24, 4, 2022);   // H M S , D M Y
-  //rtc.set(now());
-
+  // Serial.println(F("Set RTC to fixed value..."));
+  // setTime( 13, 51,  0, 29, 11, 2022);   // H M S , D M Y
+  // rtc.set(now());
+  Serial.println(F("Get RTC time..."));
+  tmElements_t tm;
+  rtc.read(tm);
+  Serial.print(tm.Hour);
+  Serial.print(F(":"));
+  Serial.print(tm.Minute);
+  Serial.print(F(":"));
+  Serial.println(tm.Second);
+  
   // --- init MP3
   Serial.println(F("Init MP3..."));
   delay(500); // just a small delay without any meaning
@@ -221,10 +254,10 @@ void setup()
   Serial.println(count);
 
   // --- init rotary switch
-  //Serial.println(F("Init rotary..."));
-  //pinMode(pin_rotary_a, INPUT);
-  //pinMode(pin_rotary_b, INPUT);
-  //rotary.setChangedHandler(rotate);
+  Serial.println(F("Init rotary..."));
+  pinMode(pin_rotary_a, INPUT);
+  pinMode(pin_rotary_b, INPUT);
+  rotary.setChangedHandler(rotate);
 
   // --- init the buttons
   rotary_button.registerCallbacks(rotary_button_pressedCallback, NULL, NULL, NULL);
@@ -279,10 +312,10 @@ void loop() {
   }
 
   // --- show the clock + init the blink flag
-  //tmElements_t tm;
-  //rtc.read(tm);
-  // blink = (tm.Second % 2 > 0);
-  //clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true);
+  tmElements_t tm;
+  rtc.read(tm);
+  blink = (tm.Second % 2 > 0);
+  clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true);
   
   // --- show the signals
   if (!signal_enabled) {
