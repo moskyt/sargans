@@ -120,10 +120,8 @@ const uint32_t wagon_uids[n_wagons] = {
 #define BUF_SIZE  75
 char message[BUF_SIZE] = "Sargans";
 
-int playing_track = 0;
-
-class Mp3Notify; 
-typedef DFMiniMp3<HardwareSerial, Mp3Notify> DfMp3; 
+class Mp3Notify;
+typedef DFMiniMp3<HardwareSerial, Mp3Notify> DfMp3;
 
 // MP3 player notifier
 class Mp3Notify {
@@ -139,7 +137,6 @@ public:
   {
     Serial.print("Play finished for #");
     Serial.println(track);
-    playing_track = 0;
   }
   static void OnPlaySourceOnline(DfMp3& mp3,DfMp3_PlaySources source) { }
   static void OnPlaySourceInserted(DfMp3& mp3,DfMp3_PlaySources source) { }
@@ -152,6 +149,7 @@ DfMp3 mp3(Serial1);
 const int mp3_volume = 26;
 
 int previous_wagon = -1;
+unsigned long previous_wagon_read_time;
 
 const int signal_mode_count = 4;
 const int signal_mode_multiplier = 6;
@@ -166,7 +164,7 @@ int strip_blink_countdown = 0;
 void setup()
 {
   Serial.begin(115200);
-  delay(2000); // just a small delay for the Serial
+  while (!Serial);  // wait for the serial port
 
   Serial.println(F("Hello from Sargans!"));
 
@@ -176,7 +174,6 @@ void setup()
   pixels.clear();
   pixels.setPixelColor(0, pixels.Color(0, neo_intensity, 0));
   pixels.show();
-  delay(500); // just a small delay without any meaning
 
   // --- init pins not handled separately
   pinMode(pin_strip, OUTPUT);
@@ -185,7 +182,6 @@ void setup()
   // --- init RFID
   Serial.println(F("Init RFID..."));
   rdm6300.begin(pin_rdm6300);
-  delay(500); // just a small delay without any meaning
 
   // change init signal to blue
   pixels.setPixelColor(0, pixels.Color(0, 0, neo_intensity));
@@ -198,7 +194,6 @@ void setup()
   printText(0, N_LED_BLOCKS-1, message);
   mx.setShiftDataInCallback(scrollDataSource);
   mx.setShiftDataOutCallback(scrollDataSink);
-  delay(500); // just a small delay without any meaning
 
   // setScrollMessage(message);
 
@@ -211,7 +206,6 @@ void setup()
   data[2] = clock_display.encodeDigit(0);
   data[3] = clock_display.encodeDigit(2);
   clock_display.setSegments(data);
-  delay(500); // just a small delay without any meaning
 
   // --- init RTC
   Serial.println(F("Init RTC..."));
@@ -231,10 +225,9 @@ void setup()
   Serial.print(tm.Minute);
   Serial.print(F(":"));
   Serial.println(tm.Second);
-  
+
   // --- init MP3
   Serial.println(F("Init MP3..."));
-  delay(500); // just a small delay without any meaning
 
   mp3.begin();
 
@@ -264,7 +257,6 @@ void setup()
   rotary_button.setup(pin_rotary_switch, button_debounce_delay, InputDebounce::PIM_INT_PULL_UP_RES);
   strip_button.registerCallbacks(strip_button_pressedCallback, NULL, NULL, NULL);
   strip_button.setup(pin_strip_switch, button_debounce_delay, InputDebounce::PIM_INT_PULL_UP_RES);
-  delay(500); // just a small delay without any meaning
 
   Serial.println(F("Init done."));
 }
@@ -284,8 +276,9 @@ void loop() {
   strip_button.process(now);
 
   // --- process RFID
-  if (rdm6300.get_new_tag_id()) {
-    uint32_t uid = rdm6300.get_tag_id();
+  [&] {
+    if (!rdm6300.get_new_tag_id()) return;
+    const uint32_t uid = rdm6300.get_tag_id();
     Serial.print(F("Read RFID "));
     Serial.print(uid, HEX);
     int current_wagon = -1;
@@ -297,26 +290,46 @@ void loop() {
     }
     Serial.print(F(" -> wagon "));
     Serial.println(current_wagon);
-    if (current_wagon > -1 && current_wagon != previous_wagon) {
-      Serial.print(F(" => printing message "));
-      Serial.println(destinations[current_wagon]);
 
-      setScrollMessage(destinations[current_wagon]);
+    const unsigned long now = millis();
 
+    if (current_wagon == -1) return;
+    if (previous_wagon == -1) {
       previous_wagon = current_wagon;
-
-      strip_blink_countdown = strip_blink_period * strip_blink_count;
-
-      mp3.playMp3FolderTrack(current_wagon+1);
+      previous_wagon_read_time = now;
+      return;
     }
-  }
+
+    const bool wagon_changed = current_wagon != previous_wagon;
+    previous_wagon = current_wagon;
+
+    // Sometimes the RFID reader starts reading the same ID in a loop. E.g.,
+    // this always happens when the reader boots up with card on it. This logic
+    // will only process an ID if there's minimum 2 seconds between reading the
+    // same ID or the ID has changed since the last read.
+    const bool should_play = [&] {
+      if (wagon_changed) return true;
+      const unsigned long time_since_last_read = now - previous_wagon_read_time;
+      previous_wagon_read_time = now;
+      return time_since_last_read > 2000;
+    }();
+
+    if (!should_play) return;
+
+    Serial.print(F(" => printing message "));
+    Serial.println(destinations[current_wagon]);
+
+    setScrollMessage(destinations[current_wagon]);
+    strip_blink_countdown = strip_blink_period * strip_blink_count;
+    mp3.playMp3FolderTrack(current_wagon+1);
+  }();
 
   // --- show the clock + init the blink flag
   tmElements_t tm;
   rtc.read(tm);
   blink = (tm.Second % 2 > 0);
   clock_display.showNumberDecEx(tm.Hour * 100 + tm.Minute, blink ? 0b01000000 : 0, true);
-  
+
   // --- show the signals
   if (!signal_enabled) {
     pixels.setPixelColor(0, pixels.Color(0, 0, 0));
