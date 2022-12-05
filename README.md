@@ -283,3 +283,12 @@ Generuje MP3 hlaseni v adresari `ansagen/mp3`. Postup je nasledujici:
 
 Je potreba mit nakonfigurovany AWS CLI, resp. vygenerovany konfigurak (pomoci `aws configure` nebo rucne).
 
+## Jak to otevrit
+
+1) k zakladne je pevne pripojena mala cast s napajeci zasuvkou
+
+2) cela boudicka je pripevnena k zasuvce pouze dvema vruty zboku, jinak je to tam vlastne jen polozene -- je to ale sestavene dost na treni k tem vnejsim hranolkum podel sten, tak by to nemelo vadit
+
+3) dreveny L-profil se zlutym tlacitkem a rotary switchem je ke stenam pripevnen opet dvema vruty
+
+4) proskleny strop jde snadno vyndat. ano, je problem, ze az prilis snadno, drazky jsou moc hluboke, takze se to da shodit dovnitr. nejspis by stalo za to pridat nejake zajisteni na ten dil s tlacitky, ale zjistil jsem to uz moc pozde.
